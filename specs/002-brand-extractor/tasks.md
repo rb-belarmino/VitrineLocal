@@ -9,8 +9,8 @@
 
 **Purpose**: Instalação de dependências e estruturação de pastas do módulo
 
-- [ ] T001 Instalar dependência oficial da Google Gemini API `@google/genai` no package.json
-- [ ] T002 Criar estrutura de diretórios para o módulo em `src/modules/brand/` (`core/`, `adapters/`, `repositories/`, `schemas/`, `__tests__/`)
+- [x] T001 Instalar dependência oficial da Google Gemini API `@google/genai` no package.json
+- [x] T002 Criar estrutura de diretórios para o módulo em `src/modules/brand/` (`core/`, `adapters/`, `repositories/`, `schemas/`, `__tests__/`)
 
 ---
 
@@ -20,11 +20,11 @@
 
 **⚠️ CRITICAL**: Nenhuma história de usuário pode ser finalizada antes da conclusão desta fundação.
 
-- [ ] T003 Atualizar schema Prisma em `prisma/schema.prisma` adicionando modelo `BrandProfile` com relação 1:1 com `QualifiedLead` e rodar `prisma db push`
-- [ ] T004 [P] Implementar schemas Zod e DTOs de validação em `src/modules/brand/schemas/brand.schemas.ts` a partir do contrato `specs/002-brand-extractor/contracts/brand-extractor.contract.ts`
-- [ ] T005 [P] Definir tipos TypeScript e interfaces de domínio em `src/modules/brand/brand.types.ts`
-- [ ] T006 [P] Escrever testes unitários para o repositório em `src/modules/brand/__tests__/brand-repository.test.ts`
-- [ ] T007 Implementar repositório `BrandRepository` em `src/modules/brand/repositories/brand.repository.ts` garantindo operações de busca por leadId, upsert de perfil e tratamento de idempotência
+- [x] T003 Atualizar schema Prisma em `prisma/schema.prisma` adicionando modelo `BrandProfile` com relação 1:1 com `QualifiedLead` e rodar `prisma db push`
+- [x] T004 [P] Implementar schemas Zod e DTOs de validação em `src/modules/brand/schemas/brand.schemas.ts` a partir do contrato `specs/002-brand-extractor/contracts/brand-extractor.contract.ts`
+- [x] T005 [P] Definir tipos TypeScript e interfaces de domínio em `src/modules/brand/brand.types.ts`
+- [x] T006 [P] Escrever testes unitários para o repositório em `src/modules/brand/__tests__/brand-repository.test.ts`
+- [x] T007 Implementar repositório `BrandRepository` em `src/modules/brand/repositories/brand.repository.ts` garantindo operações de busca por leadId, upsert de perfil e tratamento de idempotência
 
 **Checkpoint**: Fundação pronta - banco atualizado e repositório testado e aprovado.
 
@@ -37,15 +37,15 @@
 **Independent Test**: Pode ser verificado fornecendo URLs de imagens do Maps e calculando a paleta de 4 cores (primária, secundária, fundo e texto) com contraste garantido.
 
 ### Tests for User Story 1 (TDD - Write First) ⚠️
-- [ ] T008 [P] [US1] Escrever testes unitários para o dicionário de paletas de nicho em `src/modules/brand/__tests__/niche-palettes.test.ts`
-- [ ] T009 [P] [US1] Escrever testes unitários para o extrator de cores e cálculo de contraste WCAG em `src/modules/brand/__tests__/color-extractor.test.ts`
-- [ ] T010 [P] [US1] Escrever testes para o extrator de imagens e fotos do Maps em `src/modules/brand/__tests__/maps-image-extractor.test.ts`
+- [x] T008 [P] [US1] Escrever testes unitários para o dicionário de paletas de nicho em `src/modules/brand/__tests__/niche-palettes.test.ts`
+- [x] T009 [P] [US1] Escrever testes unitários para o extrator de cores e cálculo de contraste WCAG em `src/modules/brand/__tests__/color-extractor.test.ts`
+- [x] T010 [P] [US1] Escrever testes para o extrator de imagens e fotos do Maps em `src/modules/brand/__tests__/maps-image-extractor.test.ts`
 
 ### Implementation for User Story 1
-- [ ] T011 [P] [US1] Implementar dicionário de paletas de nicho e normalizador de categoria em `src/modules/brand/core/niche-palettes.ts`
-- [ ] T012 [P] [US1] Implementar algoritmo de quantização de cores e normalizador de contraste acessível em `src/modules/brand/core/color-extractor.ts`
-- [ ] T013 [US1] Implementar extrator de imagens e fotos de capa via Playwright em `src/modules/brand/adapters/maps-image-extractor.ts` (reaproveitando browser pool do radar)
-- [ ] T014 [US1] Implementar fallback para link social (Instagram) em `src/modules/brand/adapters/social-image-extractor.ts` quando o Maps tiver menos de 3 imagens
+- [x] T011 [P] [US1] Implementar dicionário de paletas de nicho e normalizador de categoria em `src/modules/brand/core/niche-palettes.ts`
+- [x] T012 [P] [US1] Implementar algoritmo de quantização de cores e normalizador de contraste acessível em `src/modules/brand/core/color-extractor.ts`
+- [x] T013 [US1] Implementar extrator de imagens e fotos de capa via Playwright em `src/modules/brand/adapters/maps-image-extractor.ts` (reaproveitando browser pool do radar)
+- [x] T014 [US1] Implementar fallback para link social (Instagram) em `src/modules/brand/adapters/social-image-extractor.ts` quando o Maps tiver menos de 3 imagens
 
 **Checkpoint**: User Story 1 funcional e testável de forma 100% isolada.
 
@@ -58,12 +58,12 @@
 **Independent Test**: Fornecer lista de avaliações brutas mockadas e validar que o algoritmo descarta avaliações sem texto ou negativas e ranqueia pelo tamanho do comentário descritivo.
 
 ### Tests for User Story 2 (TDD - Write First) ⚠️
-- [ ] T015 [P] [US2] Escrever testes unitários para o curador de avaliações em `src/modules/brand/__tests__/review-curator.test.ts`
-- [ ] T016 [P] [US2] Escrever testes unitários para o scraper de avaliações do Maps em `src/modules/brand/__tests__/maps-review-scraper.test.ts`
+- [x] T015 [P] [US2] Escrever testes unitários para o curador de avaliações em `src/modules/brand/__tests__/review-curator.test.ts`
+- [x] T016 [P] [US2] Escrever testes unitários para o scraper de avaliações do Maps em `src/modules/brand/__tests__/maps-review-scraper.test.ts`
 
 ### Implementation for User Story 2
-- [ ] T017 [P] [US2] Implementar curador e seletor heurístico de reviews em `src/modules/brand/core/review-curator.ts` (filtro 5 estrelas, descarte de comentários vazios, ordenação por extensão)
-- [ ] T018 [US2] Implementar scraper de avaliações via Playwright em `src/modules/brand/adapters/maps-review-scraper.ts`
+- [x] T017 [P] [US2] Implementar curador e seletor heurístico de reviews em `src/modules/brand/core/review-curator.ts` (filtro 5 estrelas, descarte de comentários vazios, ordenação por extensão)
+- [x] T018 [US2] Implementar scraper de avaliações via Playwright em `src/modules/brand/adapters/maps-review-scraper.ts`
 
 **Checkpoint**: Histórias 1 e 2 funcionam independentemente e podem rodar em conjunto.
 
@@ -76,10 +76,10 @@
 **Independent Test**: Chamar o sintetizador com dados do lead e verificar a geração dos 5 campos semânticos formatados, além de testar o fallback imediato em caso de erro na API do Gemini.
 
 ### Tests for User Story 3 (TDD - Write First) ⚠️
-- [ ] T019 [P] [US3] Escrever testes unitários para o adaptador do Gemini e gerador de fallback em `src/modules/brand/__tests__/gemini-synthesizer.test.ts`
+- [x] T019 [P] [US3] Escrever testes unitários para o adaptador do Gemini e gerador de fallback em `src/modules/brand/__tests__/gemini-synthesizer.test.ts`
 
 ### Implementation for User Story 3
-- [ ] T020 [US3] Implementar sintetizador de conteúdo semântico com `@google/genai` e gerador de fallback em `src/modules/brand/adapters/gemini-synthesizer.ts`
+- [x] T020 [US3] Implementar sintetizador de conteúdo semântico com `@google/genai` e gerador de fallback em `src/modules/brand/adapters/gemini-synthesizer.ts`
 
 **Checkpoint**: Todas as histórias de usuário possuem seus componentes individuais e adaptadores implementados e testados.
 
@@ -90,13 +90,13 @@
 **Purpose**: Unificar os componentes no serviço principal, implementar caching/idempotência e disponibilizar as rotas HTTP REST.
 
 ### Tests for Service and API (TDD - Write First) ⚠️
-- [ ] T021 [P] Escrever testes unitários para o serviço orquestrador em `src/modules/brand/__tests__/brand-service.test.ts`
-- [ ] T022 [P] Escrever testes de integração das rotas REST em `src/api/__tests__/brand-routes.test.ts`
+- [x] T021 [P] Escrever testes unitários para o serviço orquestrador em `src/modules/brand/__tests__/brand-service.test.ts`
+- [x] T022 [P] Escrever testes de integração das rotas REST em `src/api/__tests__/brand-routes.test.ts`
 
 ### Implementation
-- [ ] T023 Implementar `BrandExtractorService` em `src/modules/brand/brand.service.ts` unindo US1, US2 e US3, com suporte a cache no banco SQLite e parâmetro `force=true`
-- [ ] T024 Implementar rotas Express `POST /api/brand/extract/:leadId` e `GET /api/brand/:leadId` em `src/api/routes/brand.routes.ts`
-- [ ] T025 Registrar rotas de marca no servidor principal em `src/api/server.ts`
+- [x] T023 Implementar `BrandExtractorService` em `src/modules/brand/brand.service.ts` unindo US1, US2 e US3, com suporte a cache no banco SQLite e parâmetro `force=true`
+- [x] T024 Implementar rotas Express `POST /api/brand/extract/:leadId` e `GET /api/brand/:leadId` em `src/api/routes/brand.routes.ts`
+- [x] T025 Registrar rotas de marca no servidor principal em `src/api/server.ts`
 
 **Checkpoint**: API REST operacional respondendo nos endpoints `/api/brand/*`.
 
@@ -106,14 +106,14 @@
 
 **Purpose**: Validação dos 5 Quality Gates inegociáveis, documentação e REST Client
 
-- [ ] T026 [P] Atualizar arquivo de requisições `radar.http` incluindo as chamadas completas do Brand Extractor (`POST /api/brand/extract/:leadId` e `GET /api/brand/:leadId`)
-- [ ] T027 [P] Atualizar documentação da API em `docs/api-brand.md`
-- [ ] T028 [P] Atualizar documentação de arquitetura em `docs/architecture.md`
-- [ ] T029 Executar bateria completa de testes e cobertura com `npm run test:coverage` (meta >= 85%)
-- [ ] T030 Executar verificação de tipagem estrita com `npm run typecheck`
-- [ ] T031 Executar verificação de linter e formatação com `npm run lint` e `npm run format:check`
-- [ ] T032 Executar auditoria de segurança de dependências com `npm run audit`
-- [ ] T033 Executar compilação de produção com `npm run build`
+- [x] T026 [P] Atualizar arquivo de requisições `radar.http` incluindo as chamadas completas do Brand Extractor (`POST /api/brand/extract/:leadId` e `GET /api/brand/:leadId`)
+- [x] T027 [P] Atualizar documentação da API em `docs/api-brand.md`
+- [x] T028 [P] Atualizar documentação de arquitetura em `docs/architecture.md`
+- [x] T029 Executar bateria completa de testes e cobertura com `npm run test:coverage` (meta >= 85%)
+- [x] T030 Executar verificação de tipagem estrita com `npm run typecheck`
+- [x] T031 Executar verificação de linter e formatação com `npm run lint` e `npm run format:check`
+- [x] T032 Executar auditoria de segurança de dependências com `npm run audit`
+- [x] T033 Executar compilação de produção com `npm run build`
 
 ---
 

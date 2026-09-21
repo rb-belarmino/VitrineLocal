@@ -32,16 +32,18 @@ flowchart TD
         NormPhone --> LeadsDB
     end
 
-    subgraph MOD2["Módulo 2: Brand Extractor (Identidade Visual)"]
-        AssetCrawler[Coletor de Fotos & Avatar]
-        ColorEngine[Motor de Paleta de Cores<br/>Primária, Secundária, Contraste]
-        ReviewEngine[Extrator de Prova Social<br/>Depoimentos 5 Estrelas]
-        BrandProfile[(Brand Profile)]
+    subgraph MOD2["Módulo 2: Brand Extractor (Identidade Visual & Gemini IA)"]
+        AssetCrawler[Coletor de Fotos & Avatar<br/>Maps Image Extractor + Instagram Fallback]
+        ColorEngine[Motor de Paleta de Cores<br/>WCAG AA Contraste + Fallback por Nicho]
+        ReviewEngine[Extrator de Prova Social<br/>Curadoria de Depoimentos 5 Estrelas]
+        GeminiSynthesizer[Sintetizador Semântico IA<br/>Google GenAI @google/genai]
+        BrandProfile[(BrandProfile SQLite / Prisma)]
 
         LeadsDB --> AssetCrawler
         AssetCrawler --> ColorEngine
         AssetCrawler --> ReviewEngine
-        ColorEngine & ReviewEngine --> BrandProfile
+        ReviewEngine --> GeminiSynthesizer
+        ColorEngine & ReviewEngine & GeminiSynthesizer --> BrandProfile
     end
 
     subgraph MOD3["Módulo 3: Site Engine (Templates & Preview)"]

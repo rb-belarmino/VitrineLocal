@@ -3,13 +3,21 @@ import express, { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { RadarService } from '../modules/radar/radar.service';
 import { createRadarRoutes } from './routes/radar.routes';
+import { BrandExtractorService } from '../modules/brand/brand.service';
+import { BrandRepository } from '../modules/brand/repositories/brand.repository';
+import { createBrandRoutes } from './routes/brand.routes';
 import { AppError } from '../shared/errors/app-error';
 import { Logger } from '../shared/logger/logger';
 
-export function createApp(prismaClient?: PrismaClient, radarService?: RadarService) {
+export function createApp(
+  prismaClient?: PrismaClient,
+  radarService?: RadarService,
+  brandService?: BrandExtractorService
+) {
   const app = express();
   const prisma = prismaClient ?? new PrismaClient();
-  const service = radarService ?? new RadarService(prisma);
+  const rService = radarService ?? new RadarService(prisma);
+  const bService = brandService ?? new BrandExtractorService(new BrandRepository(prisma));
 
   app.use(express.json());
 
@@ -18,8 +26,11 @@ export function createApp(prismaClient?: PrismaClient, radarService?: RadarServi
     res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
-  // Rotas do Radar
-  app.use('/api/radar', createRadarRoutes(service));
+  // Rotas do Radar (Módulo 1)
+  app.use('/api/radar', createRadarRoutes(rService));
+
+  // Rotas do Brand Extractor (Módulo 2)
+  app.use('/api/brand', createBrandRoutes(bService));
 
   // Middleware global de tratamento de erros
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {

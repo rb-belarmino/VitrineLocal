@@ -92,3 +92,30 @@ Content-Type: {{contentType}}
   "location": "Pinheiros, São Paulo",
   "limit": 5
 }
+
+###
+
+### ==============================================================================
+### MÓDULO 2: BRAND EXTRACTOR (Enriquecimento Visual, Cores & Gemini IA)
+### ==============================================================================
+
+### 11. Extrair Identidade de Marca (Sob Demanda)
+# Substitua pelo UUID de um lead retornado no GET /api/radar/leads
+# @name extractBrand
+POST {{baseUrl}}/api/brand/extract/20d8d117-c19b-4678-be82-2985e5444c35
+Content-Type: {{contentType}}
+
+###
+
+### 12. Consultar Perfil de Marca Extraído
+# Retorna paleta de cores (WCAG AA), fotos em alta resolução, depoimentos 5★ e copy gerada
+GET {{baseUrl}}/api/brand/20d8d117-c19b-4678-be82-2985e5444c35
+Content-Type: {{contentType}}
+
+###
+
+### 13. Forçar Re-extração (Bypass do Cache no Banco)
+# Ignora o perfil existente no banco e executa novo scraping + síntese com IA
+POST {{baseUrl}}/api/brand/extract/20d8d117-c19b-4678-be82-2985e5444c35?force=true
+Content-Type: {{contentType}}
+
