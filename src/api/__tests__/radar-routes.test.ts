@@ -19,8 +19,8 @@ describe('Radar REST API Endpoints (Integration)', () => {
       website: null,
       rating: 4.8,
       reviewCount: 40,
-      mapsUrl: 'https://maps.google.com/?cid=999888'
-    }
+      mapsUrl: 'https://maps.google.com/?cid=999888',
+    },
   ]);
 
   const radarService = new RadarService(prisma, mockScraper);
@@ -42,22 +42,18 @@ describe('Radar REST API Endpoints (Integration)', () => {
   });
 
   it('POST /api/radar/search deve rejeitar payload inválido com 400', async () => {
-    const res = await request(app)
-      .post('/api/radar/search')
-      .send({ niche: 'A' }); // niche curto demais e sem location
+    const res = await request(app).post('/api/radar/search').send({ niche: 'A' }); // niche curto demais e sem location
 
     expect(res.status).toBe(400);
     expect(res.body.error).toBe('ValidationError');
   });
 
   it('POST /api/radar/search deve enfileirar a busca e retornar 202 com jobId', async () => {
-    const res = await request(app)
-      .post('/api/radar/search')
-      .send({
-        niche: 'Dentista',
-        location: 'Moema, São Paulo',
-        limit: 5
-      });
+    const res = await request(app).post('/api/radar/search').send({
+      niche: 'Dentista',
+      location: 'Moema, São Paulo',
+      limit: 5,
+    });
 
     expect(res.status).toBe(202);
     expect(res.body.success).toBe(true);
@@ -67,7 +63,7 @@ describe('Radar REST API Endpoints (Integration)', () => {
     const jobId = res.body.data.jobId;
 
     // Aguarda processamento do job
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Consulta status do job
     const statusRes = await request(app).get(`/api/radar/jobs/${jobId}`);
@@ -81,14 +77,12 @@ describe('Radar REST API Endpoints (Integration)', () => {
 
   it('GET /api/radar/leads deve listar os leads qualificados cadastrados', async () => {
     // Insere busca e aguarda
-    await request(app)
-      .post('/api/radar/search')
-      .send({
-        niche: 'Dentista',
-        location: 'Moema, São Paulo'
-      });
+    await request(app).post('/api/radar/search').send({
+      niche: 'Dentista',
+      location: 'Moema, São Paulo',
+    });
 
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     const res = await request(app).get('/api/radar/leads');
     expect(res.status).toBe(200);
@@ -97,7 +91,9 @@ describe('Radar REST API Endpoints (Integration)', () => {
     expect(res.body.data[0].businessName).toBe('Clínica Odonto Moema');
 
     // Teste com filtros na query
-    const filteredRes = await request(app).get('/api/radar/leads?niche=Clínica&location=Moema&minScore=50');
+    const filteredRes = await request(app).get(
+      '/api/radar/leads?niche=Clínica&location=Moema&minScore=50',
+    );
     expect(filteredRes.status).toBe(200);
     expect(filteredRes.body.total).toBe(1);
 

@@ -18,12 +18,12 @@ describe('BrandRepository (Unit)', () => {
   beforeEach(() => {
     mockPrisma = {
       qualifiedLead: {
-        findUnique: vi.fn()
+        findUnique: vi.fn(),
       },
       brandProfile: {
         findUnique: vi.fn(),
-        upsert: vi.fn()
-      }
+        upsert: vi.fn(),
+      },
     };
     repository = new BrandRepository(mockPrisma as unknown as PrismaClient);
   });
@@ -40,10 +40,10 @@ describe('BrandRepository (Unit)', () => {
         lead: {
           select: {
             businessName: true,
-            category: true
-          }
-        }
-      }
+            category: true,
+          },
+        },
+      },
     });
   });
 
@@ -69,16 +69,16 @@ describe('BrandRepository (Unit)', () => {
           authorName: 'João Silva',
           rating: 5,
           relativeTime: 'há 2 semanas',
-          text: 'Melhor oficina da região, resolveram rápido.'
-        }
+          text: 'Melhor oficina da região, resolveram rápido.',
+        },
       ]),
       status: 'COMPLETED',
       createdAt: new Date('2026-09-21T12:00:00Z'),
       updatedAt: new Date('2026-09-21T12:00:00Z'),
       lead: {
         businessName: 'Precision Auto Center',
-        category: 'Oficina Mecânica'
-      }
+        category: 'Oficina Mecânica',
+      },
     };
 
     mockPrisma.brandProfile.findUnique.mockResolvedValue(mockRecord);
@@ -105,23 +105,23 @@ describe('BrandRepository (Unit)', () => {
         secondaryColor: '#334155',
         backgroundColor: '#0F172A',
         textColor: '#F8FAFC',
-        paletteSource: 'EXTRACTED'
+        paletteSource: 'EXTRACTED',
       },
       content: {
         headline: 'Headline Teste',
         subheadline: 'Subheadline Teste',
         aboutText: 'About text descritivo longo para teste.',
         keyServices: ['Serviço A', 'Serviço B'],
-        callToAction: 'Chame no WhatsApp'
+        callToAction: 'Chame no WhatsApp',
       },
       testimonials: [
         {
           authorName: 'Maria',
           rating: 5,
           relativeTime: 'ontem',
-          text: 'Atendimento impecável!'
-        }
-      ]
+          text: 'Atendimento impecável!',
+        },
+      ],
     };
 
     const mockSaved = {
@@ -145,8 +145,8 @@ describe('BrandRepository (Unit)', () => {
       updatedAt: new Date(),
       lead: {
         businessName: 'Precision Auto Center',
-        category: 'Oficina Mecânica'
-      }
+        category: 'Oficina Mecânica',
+      },
     };
 
     mockPrisma.brandProfile.upsert.mockResolvedValue(mockSaved);
@@ -156,8 +156,8 @@ describe('BrandRepository (Unit)', () => {
     expect(result.id).toBe('brand-saved-1');
     expect(mockPrisma.brandProfile.upsert).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { leadId: 'lead-uuid-1' }
-      })
+        where: { leadId: 'lead-uuid-1' },
+      }),
     );
   });
 });

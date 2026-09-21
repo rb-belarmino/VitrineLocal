@@ -3,7 +3,7 @@ import {
   calculateRelativeLuminance,
   calculateContrastRatio,
   ensureAccessibleContrast,
-  extractPaletteFromSamples
+  extractPaletteFromSamples,
 } from '../core/color-extractor';
 
 describe('ColorExtractor & WCAG Contrast (Unit)', () => {

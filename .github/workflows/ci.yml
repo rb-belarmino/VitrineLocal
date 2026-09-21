@@ -11,7 +11,7 @@ jobs:
     name: Quality Gates & Testing
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: "file:./dev.db"
+      DATABASE_URL: 'file:./dev.db'
       NODE_ENV: test
 
     steps:
@@ -32,14 +32,17 @@ jobs:
           npx prisma generate
           npx prisma db push --skip-generate
 
-      - name: Gate 1 - Strict Typecheck
+      - name: Gate 1 - Formatting (Prettier)
+        run: npm run format:check
+
+      - name: Gate 2 - Strict Typecheck
         run: npm run typecheck
 
-      - name: Gate 2 - ESLint (Zero Warnings)
+      - name: Gate 3 - ESLint (Zero Warnings)
         run: npm run lint
 
-      - name: Gate 3 - Dependency Audit
+      - name: Gate 4 - Dependency Audit
         run: npm run audit
 
-      - name: Gate 4 - Test Suite with Coverage
+      - name: Gate 5 - Test Suite with Coverage
         run: npm run test:coverage

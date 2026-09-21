@@ -9,29 +9,29 @@ model BrandProfile {
   id              String         @id @default(uuid())
   leadId          String         @unique
   lead            QualifiedLead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  
+
   // Mídias Visuais (URLs remotas de alta resolução)
   logoUrl         String?
   heroImageUrl    String?
   galleryUrls     String         @default("[]") // JSON stringified array: string[]
-  
+
   // Identidade de Cores & CSS
   primaryColor    String         // HEX (ex: "#0284C7")
   secondaryColor  String         // HEX (ex: "#0D9488")
   backgroundColor String         // HEX (ex: "#FFFFFF" ou "#0F172A")
   textColor       String         // HEX com alto contraste WCAG AA (ex: "#0F172A")
   paletteSource   String         // "EXTRACTED" | "FALLBACK_NICHE"
-  
+
   // Síntese Semântica de Conteúdo (Gemini AI)
   headline        String
   subheadline     String
   aboutText       String
   keyServices     String         @default("[]") // JSON stringified array: string[]
   callToAction    String
-  
+
   // Prova Social & Depoimentos Curados
   testimonials    String         @default("[]") // JSON stringified array: TestimonialItem[]
-  
+
   // Estado e Metadados
   status          String         @default("COMPLETED") // "COMPLETED" | "FAILED"
   errorMessage    String?
@@ -44,6 +44,7 @@ model BrandProfile {
 ```
 
 Atualização necessária no modelo `QualifiedLead` em `prisma/schema.prisma`:
+
 ```prisma
 model QualifiedLead {
   // ... campos existentes ...
@@ -56,6 +57,7 @@ model QualifiedLead {
 ## Estruturas de Dados Tipadas (TypeScript / Zod)
 
 ### TestimonialItem
+
 ```typescript
 export interface TestimonialItem {
   authorName: string;
@@ -67,6 +69,7 @@ export interface TestimonialItem {
 ```
 
 ### BrandPaletteDTO
+
 ```typescript
 export interface BrandPaletteDTO {
   primaryColor: string;
@@ -78,6 +81,7 @@ export interface BrandPaletteDTO {
 ```
 
 ### BrandProfileDTO (Resposta da API)
+
 ```typescript
 export interface BrandProfileDTO {
   id: string;

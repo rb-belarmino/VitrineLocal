@@ -44,10 +44,12 @@
 **Independent Test**: Executar o teste de unidade offline contra as fixtures HTML e em seguida uma busca de fumaça Playwright headless mockada, verificando que os cards contêm nome, categoria, telefone bruto, endereço e website.
 
 ### Tests for User Story 1 (TDD - Red Phase)
+
 - [x] T015 [P] [US1] Escrever testes unitários para o parser de cards do DOM usando fixtures HTML estáticas em `/src/modules/radar/__tests__/dom-parser.test.ts`
 - [x] T016 [P] [US1] Escrever testes para o gerenciador de browser e detecção de encerramento do feed em `/src/modules/radar/__tests__/maps-scraper.test.ts`
 
 ### Implementation for User Story 1
+
 - [x] T017 [P] [US1] Mapear seletores CSS e atributos do DOM do Google Maps em `/src/modules/radar/scraper/maps-selectors.ts`
 - [x] T018 [US1] Implementar o parser seguro de DOM com Cheerio/Playwright para extrair `RawMapsLead` em `/src/modules/radar/scraper/dom-parser.ts` (satisfaz T015)
 - [x] T019 [P] [US1] Implementar gerenciador de contexto Playwright com flags de anti-fingerprinting e stealth em `/src/modules/radar/scraper/browser-pool.ts`
@@ -64,9 +66,11 @@
 **Independent Test**: Fornecer uma bateria de pelo menos 30 URLs variadas (redes sociais, links nulos, domínios próprios) e validar 100% de acerto na classificação.
 
 ### Tests for User Story 2 (TDD - Red Phase)
+
 - [x] T021 [P] [US2] Escrever testes unitários exaustivos para o classificador de websites em `/src/modules/radar/__tests__/website-classifier.test.ts`
 
 ### Implementation for User Story 2
+
 - [x] T022 [US2] Implementar classificador determinístico de URLs com whitelist de redes sociais (`instagram.com`, `facebook.com`, `linktr.ee`, `wa.me`, etc.) em `/src/modules/radar/core/website-classifier.ts` (satisfaz T021)
 
 **Checkpoint**: Filtro Anti-Site concluído, permitindo segregar empresas sem site próprio.
@@ -80,9 +84,11 @@
 **Independent Test**: Passar conjuntos de leads com notas e contagens de reviews variadas e verificar o score e status de qualificação correspondente.
 
 ### Tests for User Story 3 (TDD - Red Phase)
+
 - [x] T023 [P] [US3] Escrever testes unitários para a fórmula de score comercial e qualificação em `/src/modules/radar/__tests__/lead-scorer.test.ts`
 
 ### Implementation for User Story 3
+
 - [x] T024 [US3] Implementar algoritmo de score comercial (`score >= 40`, `rating >= 4.0`, `reviewCount >= 5`) em `/src/modules/radar/core/lead-scorer.ts` (satisfaz T023)
 
 **Checkpoint**: Motor de qualificação e scoring comercial ativo e validado.
@@ -96,10 +102,12 @@
 **Independent Test**: Executar testes com formatos telefônicos com/sem DDD e tentar persistir leads repetidos validando a chave de deduplicação.
 
 ### Tests for User Story 4 (TDD - Red Phase)
+
 - [x] T025 [P] [US4] Escrever testes unitários para normalização telefônica e detecção de WhatsApp em `/src/modules/radar/__tests__/phone-normalizer.test.ts`
 - [x] T026 [P] [US4] Escrever testes de integração de persistência e deduplicação no repositório Prisma em `/src/modules/radar/__tests__/lead-repository.test.ts`
 
 ### Implementation for User Story 4
+
 - [x] T027 [US4] Implementar normalizador de telefone para padrão E.164 e detector `isMobile: true/false` em `/src/modules/radar/core/phone-normalizer.ts` (satisfaz T025)
 - [x] T028 [US4] Implementar lógica de deduplicação por `mapsUrl` e hash `businessName + phone` com persistência de leads `QUALIFIED` e `DISQUALIFIED` em `/src/modules/radar/core/lead-persister.ts` (satisfaz T026)
 
@@ -114,9 +122,11 @@
 **Independent Test**: Realizar requisições HTTP de ponta a ponta com Supertest/Vitest comprovando o retorno `202 Accepted` imediato, polling de status e recuperação final dos leads.
 
 ### Tests for User Story 5 (TDD - Red Phase)
+
 - [x] T029 [P] [US5] Escrever testes de integração de API HTTP para os endpoints do Radar em `/src/api/__tests__/radar-routes.test.ts`
 
 ### Implementation for User Story 5
+
 - [x] T030 [US5] Implementar a fachada de serviço `RadarService` que coordena o scraper, normalizadores, fila FIFO e repositório Prisma em `/src/modules/radar/radar.service.ts`
 - [x] T031 [US5] Implementar rotas Express/Node HTTP (`POST /api/radar/search`, `GET /api/radar/jobs/:id`, `GET /api/radar/leads`) em `/src/api/routes/radar.routes.ts`
 - [x] T032 [US5] Configurar servidor HTTP principal da aplicação com middleware de erro e validação Zod em `/src/api/server.ts` (satisfaz T029)
@@ -161,11 +171,13 @@ flowchart TD
 ## Implementation Strategy
 
 ### MVP First (Phases 1, 2 e 3 + 4)
+
 1. Completar **Phase 1 (Setup)** e **Phase 2 (Foundational)**.
 2. Implementar **Phase 3 (US1 - Extração)** e **Phase 4 (US2 - Anti-Site)**.
 3. **Validar MVP**: Extrair e classificar empresas de um bairro sem site próprio.
 
 ### Incremental Delivery
+
 1. Adicionar **Phase 5 (Score)** e **Phase 6 (Normalização & Deduplicação)**.
 2. Adicionar **Phase 7 (API REST & Fila FIFO de Jobs)**.
 3. Concluir **Phase 8 (Quality Gates & Documentação)**.

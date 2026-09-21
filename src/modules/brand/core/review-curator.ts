@@ -25,7 +25,7 @@ export function curateTopReviews(reviews: RawReview[], maxReviews = 5): Testimon
       authorName: r.authorName || 'Cliente Google',
       rating: 5,
       relativeTime: r.relativeTime || 'recente',
-      text: r.text.trim()
+      text: r.text.trim(),
     };
     if (r.authorPhotoUrl) {
       item.authorPhotoUrl = r.authorPhotoUrl;

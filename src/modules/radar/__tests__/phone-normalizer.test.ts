@@ -8,7 +8,7 @@ describe('PhoneNormalizer (E.164 & WhatsApp Detection)', () => {
       raw: '(11) 98765-4321',
       e164: '+5511987654321',
       isMobile: true,
-      ddd: '11'
+      ddd: '11',
     });
   });
 
@@ -18,7 +18,7 @@ describe('PhoneNormalizer (E.164 & WhatsApp Detection)', () => {
       raw: '(11) 3214-5678',
       e164: '+551132145678',
       isMobile: false,
-      ddd: '11'
+      ddd: '11',
     });
   });
 

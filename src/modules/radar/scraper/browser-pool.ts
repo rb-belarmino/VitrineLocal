@@ -19,8 +19,8 @@ export class BrowserPool {
           '--disable-accelerated-2d-canvas',
           '--disable-gpu',
           '--window-size=1280,800',
-          '--disable-blink-features=AutomationControlled'
-        ]
+          '--disable-blink-features=AutomationControlled',
+        ],
       });
     }
     return this.browserInstance;
@@ -31,22 +31,23 @@ export class BrowserPool {
    */
   public static async createStealthContext(browser: Browser): Promise<BrowserContext> {
     const context = await browser.newContext({
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+      userAgent:
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
       viewport: { width: 1280, height: 800 },
       locale: 'pt-BR',
       timezoneId: 'America/Sao_Paulo',
-      permissions: ['geolocation']
+      permissions: ['geolocation'],
     });
 
     // Injeta scripts para mascarar automação
     await context.addInitScript(() => {
       Object.defineProperty(navigator, 'webdriver', {
-        get: () => undefined
+        get: () => undefined,
       });
     });
 
     // Bloqueia imagens, fontes e estilos secundários para economizar banda e acelerar scraping
-    await context.route('**/*.{png,jpg,jpeg,svg,webp,gif,woff,woff2}', route => {
+    await context.route('**/*.{png,jpg,jpeg,svg,webp,gif,woff,woff2}', (route) => {
       void route.abort();
     });
 

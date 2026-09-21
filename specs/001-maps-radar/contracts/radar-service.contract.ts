@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import { 
-  SearchParamsSchema, 
-  QualifiedLeadSchema, 
-  RawMapsLeadSchema 
-} from '../data-model';
+import { SearchParamsSchema, QualifiedLeadSchema, RawMapsLeadSchema } from '../data-model';
 
 export type SearchParams = z.infer<typeof SearchParamsSchema>;
 export type QualifiedLead = z.infer<typeof QualifiedLeadSchema>;

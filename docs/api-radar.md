@@ -13,6 +13,7 @@ Inicia um job assíncrono de mineração e qualificação no Google Maps. A requ
 - **Content-Type:** `application/json`
 
 ### Payload de Entrada
+
 ```json
 {
   "niche": "Oficina Mecânica",
@@ -21,13 +22,14 @@ Inicia um job assíncrono de mineração e qualificação no Google Maps. A requ
 }
 ```
 
-| Campo | Tipo | Obrigatório | Descrição |
-|---|---|---|---|
-| `niche` | `string` | Sim | Nicho ou ramo do comércio (mínimo 2 caracteres) |
-| `location` | `string` | Sim | Bairro, cidade ou estado de busca |
-| `limit` | `number` | Não | Máximo de resultados a minerar (default: 20, máx: 100) |
+| Campo      | Tipo     | Obrigatório | Descrição                                              |
+| ---------- | -------- | ----------- | ------------------------------------------------------ |
+| `niche`    | `string` | Sim         | Nicho ou ramo do comércio (mínimo 2 caracteres)        |
+| `location` | `string` | Sim         | Bairro, cidade ou estado de busca                      |
+| `limit`    | `number` | Não         | Máximo de resultados a minerar (default: 20, máx: 100) |
 
 ### Resposta de Sucesso (`202 Accepted`)
+
 ```json
 {
   "success": true,
@@ -49,6 +51,7 @@ Permite realizar polling do estado do job de scraping até sua conclusão.
 - **Rota:** `/api/radar/jobs/:id`
 
 ### Resposta (`200 OK` - Concluído)
+
 ```json
 {
   "success": true,
@@ -100,6 +103,7 @@ Recupera todos os estabelecimentos qualificados já persistidos na base de dados
   - `minScore` (opcional): pontuação mínima (ex: `80`)
 
 ### Resposta (`200 OK`)
+
 ```json
 {
   "success": true,

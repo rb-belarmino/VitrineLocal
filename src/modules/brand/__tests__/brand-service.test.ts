@@ -36,7 +36,7 @@ describe('BrandExtractorService (Unit)', () => {
     businessName: 'Oficina Precision',
     category: 'Oficina Mecânica',
     mapsUrl: 'https://maps.google.com/place/precision',
-    socialLinks: JSON.stringify(['https://instagram.com/precision'])
+    socialLinks: JSON.stringify(['https://instagram.com/precision']),
   };
 
   const mockExistingProfile = {
@@ -52,48 +52,48 @@ describe('BrandExtractorService (Unit)', () => {
       secondaryColor: '#334155',
       backgroundColor: '#0F172A',
       textColor: '#F8FAFC',
-      paletteSource: 'EXTRACTED' as const
+      paletteSource: 'EXTRACTED' as const,
     },
     content: {
       headline: 'Oficina Precision Moema',
       subheadline: 'Confiança e precisão',
       aboutText: 'Mais de 10 anos de experiência.',
       keyServices: ['Mecânica Geral'],
-      callToAction: 'Fale no WhatsApp'
+      callToAction: 'Fale no WhatsApp',
     },
     testimonials: [],
     status: 'COMPLETED' as const,
     createdAt: '2026-09-21T12:00:00.000Z',
-    updatedAt: '2026-09-21T12:00:00.000Z'
+    updatedAt: '2026-09-21T12:00:00.000Z',
   };
 
   beforeEach(() => {
     mockRepository = {
       findLeadById: vi.fn(),
       findByLeadId: vi.fn(),
-      upsert: vi.fn()
+      upsert: vi.fn(),
     };
     mockImageExtractor = {
-      extract: vi.fn()
+      extract: vi.fn(),
     };
     mockSocialExtractor = {
-      extractFromSocial: vi.fn()
+      extractFromSocial: vi.fn(),
     };
     mockReviewScraper = {
-      extract: vi.fn()
+      extract: vi.fn(),
     };
     mockSynthesizer = {
-      synthesize: vi.fn()
+      synthesize: vi.fn(),
     };
     mockBrowserPool = {
       acquireContext: vi.fn().mockResolvedValue({
         page: {
-          close: vi.fn()
+          close: vi.fn(),
         },
         context: {
-          close: vi.fn()
-        }
-      })
+          close: vi.fn(),
+        },
+      }),
     };
 
     service = new BrandExtractorService(
@@ -102,7 +102,7 @@ describe('BrandExtractorService (Unit)', () => {
       mockImageExtractor as unknown as MapsImageExtractor,
       mockSocialExtractor as unknown as SocialImageExtractor,
       mockReviewScraper as unknown as MapsReviewScraper,
-      mockSynthesizer as unknown as GeminiSynthesizer
+      mockSynthesizer as unknown as GeminiSynthesizer,
     );
   });
 
@@ -146,7 +146,7 @@ describe('BrandExtractorService (Unit)', () => {
       mockImageExtractor.extract.mockResolvedValue({
         logoUrl: 'https://cdn.example.com/new-logo.jpg',
         heroImageUrl: 'https://cdn.example.com/new-hero.jpg',
-        galleryUrls: ['https://cdn.example.com/new1.jpg', 'https://cdn.example.com/new2.jpg']
+        galleryUrls: ['https://cdn.example.com/new1.jpg', 'https://cdn.example.com/new2.jpg'],
       });
 
       mockSocialExtractor.extractFromSocial.mockResolvedValue(['https://instagram.com/p1.jpg']);
@@ -156,8 +156,8 @@ describe('BrandExtractorService (Unit)', () => {
           authorName: 'Pedro',
           rating: 5,
           relativeTime: 'há 1 mês',
-          text: 'Oficina fantástica, atendimento rápido e equipe muito honesta!'
-        }
+          text: 'Oficina fantástica, atendimento rápido e equipe muito honesta!',
+        },
       ]);
 
       mockSynthesizer.synthesize.mockResolvedValue({
@@ -165,12 +165,12 @@ describe('BrandExtractorService (Unit)', () => {
         subheadline: 'Tecnologia de ponta em revisão automotiva',
         aboutText: 'Atendendo com máxima dedicação.',
         keyServices: ['Revisão', 'Freios'],
-        callToAction: 'Chame no WhatsApp agora'
+        callToAction: 'Chame no WhatsApp agora',
       });
 
       mockRepository.upsert.mockResolvedValue({
         ...mockExistingProfile,
-        id: 'profile-new'
+        id: 'profile-new',
       });
 
       const result = await service.extractBrand('lead-123', true);

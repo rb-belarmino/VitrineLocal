@@ -11,13 +11,14 @@
 ## Clarifications
 
 ### Session 2026-09-21
+
 - Q: Como o sistema deve se comportar quando o operador solicitar a extração de marca para um lead que já possui um perfil extraído anteriormente? → A: Retornar o perfil existente persistido no banco por padrão (idempotente/cache no banco de dados via Prisma, sem necessidade de Redis); reprocessar apenas se `?force=true` for informado explicitamente.
 - Q: Como o sistema deve priorizar e selecionar as 3 a 5 avaliações quando o perfil do Google Maps possuir dezenas de avaliações 5 estrelas? → A: Priorizar comentários 5 estrelas com maior extensão e detalhamento textual (maior contagem de caracteres descritivos do atendimento e qualidade do serviço).
 - Q: Como o sistema deve reagir se as cores extraídas das fotos resultarem em contraste insuficiente para leitura de textos? → A: Ajustar programaticamente o contraste das cores de fundo e texto (garantindo legibilidade com proporção de contraste acessível), preservando a cor primária autêntica da marca como destaque nos elementos visuais.
 
 ---
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Extração de Identidade Visual e Paleta de Cores (Priority: P1)
 
@@ -72,7 +73,7 @@ Como prospector, desejo que o sistema processe o nicho, as avaliações e as car
 
 ---
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -90,7 +91,7 @@ Como prospector, desejo que o sistema processe o nicho, as avaliações e as car
 
 ---
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **BrandProfile**:
   - `id`: Identificador único do enriquecimento de marca.
@@ -114,7 +115,7 @@ Como prospector, desejo que o sistema processe o nicho, as avaliações e as car
 
 ---
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

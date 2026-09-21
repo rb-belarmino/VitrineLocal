@@ -21,19 +21,22 @@ describe('PrismaLeadRepository & LeadPersister (Integration)', () => {
     const job = await repository.createSearchJob({
       niche: 'Oficina Mecânica',
       location: 'Moema, São Paulo',
-      limit: 10
+      limit: 10,
     });
 
-    const lead = await persister.processAndSave({
-      businessName: 'Mecânica Moema Car',
-      category: 'Oficina mecânica',
-      address: 'Av. Moema, 100',
-      phone: '(11) 98888-7777',
-      website: null,
-      rating: 4.8,
-      reviewCount: 95,
-      mapsUrl: 'https://maps.google.com/?cid=11111'
-    }, job.id);
+    const lead = await persister.processAndSave(
+      {
+        businessName: 'Mecânica Moema Car',
+        category: 'Oficina mecânica',
+        address: 'Av. Moema, 100',
+        phone: '(11) 98888-7777',
+        website: null,
+        rating: 4.8,
+        reviewCount: 95,
+        mapsUrl: 'https://maps.google.com/?cid=11111',
+      },
+      job.id,
+    );
 
     expect(lead.status).toBe('QUALIFIED');
     expect(lead.phoneNormalized).toBe('+5511988887777');
@@ -53,7 +56,7 @@ describe('PrismaLeadRepository & LeadPersister (Integration)', () => {
       website: 'https://www.autocenterpaulista.com.br',
       rating: 4.9,
       reviewCount: 300,
-      mapsUrl: 'https://maps.google.com/?cid=22222'
+      mapsUrl: 'https://maps.google.com/?cid=22222',
     });
 
     expect(lead.status).toBe('DISQUALIFIED');
@@ -69,7 +72,7 @@ describe('PrismaLeadRepository & LeadPersister (Integration)', () => {
       category: 'Barbearia',
       rating: 4.5,
       reviewCount: 10,
-      mapsUrl: 'https://maps.google.com/?cid=33333'
+      mapsUrl: 'https://maps.google.com/?cid=33333',
     });
 
     // Segunda execução com mais reviews
@@ -78,7 +81,7 @@ describe('PrismaLeadRepository & LeadPersister (Integration)', () => {
       category: 'Barbearia',
       rating: 4.7,
       reviewCount: 35,
-      mapsUrl: 'https://maps.google.com/?cid=33333'
+      mapsUrl: 'https://maps.google.com/?cid=33333',
     });
 
     const leads = await repository.getQualifiedLeads();

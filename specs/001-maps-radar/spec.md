@@ -12,6 +12,7 @@
 O **Maps Radar** é o primeiro módulo da cadeia do VitrineLocal e atua como o motor de mineração e qualificação de oportunidades locais.
 
 ### Objetivo Central
+
 Mapear e minerar automaticamente comércios e prestadores de serviços no **Google Maps** (via automação headless resiliente com Playwright, sem dependência de APIs pagas do Google Places), filtrando rigorosamente apenas empresas de alta reputação que **não possuem website próprio** (ou que utilizam apenas redes sociais como página web).
 
 ---
@@ -19,6 +20,7 @@ Mapear e minerar automaticamente comércios e prestadores de serviços no **Goog
 ## Clarifications
 
 ### Session 2026-09-21
+
 - Q: De que forma o operador irá acionar e consumir as buscas do Maps Radar nesta primeira entrega do Módulo 1? → A: API HTTP / REST (Opção B): Servidor web expondo rota `POST /api/radar/search` recebendo payload JSON com parâmetros e retornando os resultados estruturados de leads.
 - Q: Como o endpoint `POST /api/radar/search` deve se comportar durante a raspagem (considerando tempos de 15 a 45s)? → A: Job Assíncrono com Polling (Opção B): Retorna `202 Accepted` com `jobId` imediatamente; processa o scraping em background e expõe `GET /api/radar/jobs/:id` para acompanhar status (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`) e recuperar os leads minerados ao término.
 - Q: Como o sistema deve lidar com os estabelecimentos que forem desqualificados pelos filtros? → A: Persistir com Status Desqualificado (Opção A): Salva no banco com `status: 'DISQUALIFIED'` e o motivo do descarte em `disqualificationReason` (ex: `HAS_WEBSITE`, `LOW_RATING`, `LOW_REVIEWS`), criando histórico que impede re-processamento em buscas futuras.
@@ -49,12 +51,13 @@ Mapear e minerar automaticamente comércios e prestadores de serviços no **Goog
 
 ### User Story 1 - Extração de Leads via Google Maps (Priority: P1)
 
-*Como operador do VitrineLocal, desejo informar um nicho e uma localidade geográfica (ex: "Oficinas Mecânicas em Moema, SP") e extrair a lista bruta de estabelecimentos comerciais encontrados com seus dados cadastrais essenciais.*
+_Como operador do VitrineLocal, desejo informar um nicho e uma localidade geográfica (ex: "Oficinas Mecânicas em Moema, SP") e extrair a lista bruta de estabelecimentos comerciais encontrados com seus dados cadastrais essenciais._
 
 - **Why this priority:** É o mecanismo fundamental de coleta do sistema; sem a extração de dados brutos, nenhuma análise de qualificação é possível.
 - **Independent Test:** Pode ser testado fornecendo um snapshot de busca do Maps ou rodando o scraper em modo headless controlado com mock de página de resultados, verificando se a lista de estabelecimentos extraída contém nome, nota, contagem de reviews, telefone, endereço, categoria e link de website.
 
 **Acceptance Scenarios:**
+
 1. **Given** um termo de busca válido (nicho e cidade/bairro), **When** o Playwright executa a navegação na busca do Google Maps e rola a lista de resultados (`div[role="feed"]`), **Then** o sistema extrai cada card visível sem perder dados obrigatórios.
 2. **Given** um estabelecimento sem telefone ou endereço informado no Maps, **When** o extrator processa o card, **Then** os campos ausentes são registrados como `null` de forma segura sem lançar exceções de runtime.
 3. **Given** uma instabilidade de rede ou lentidão no carregamento de um item, **When** o timeout individual de 5 segundos expira, **Then** o sistema registra um aviso estruturado no log e continua o processamento do próximo item do lote.
@@ -63,12 +66,13 @@ Mapear e minerar automaticamente comércios e prestadores de serviços no **Goog
 
 ### User Story 2 - Filtro Anti-Site e Qualificação de Presença Digital (Priority: P1)
 
-*Como motor de qualificação, desejo inspecionar o campo de website de cada lead minerado e classificá-lo estritamente entre "Qualificado para Prospecção" (sem site ou apenas rede social) e "Desqualificado" (já possui site próprio).*
+_Como motor de qualificação, desejo inspecionar o campo de website de cada lead minerado e classificá-lo estritamente entre "Qualificado para Prospecção" (sem site ou apenas rede social) e "Desqualificado" (já possui site próprio)._
 
 - **Why this priority:** O diferencial competitivo do VitrineLocal apoia-se em abordar empresas sem site. Prospectar empresas que já possuem bons sites queima o canal de vendas e desperdiça processamento.
 - **Independent Test:** Pode ser testado unitariamente fornecendo uma bateria de URLs variadas (domínios próprios, links de Instagram, Facebook, Linktree, URLs nulas, encurtadores) e verificando se o classificador rotula 100% dos casos de acordo com as regras de negócio.
 
 **Acceptance Scenarios:**
+
 1. **Given** um lead onde o campo de website é nulo, vazio ou ausente, **When** o classificador avalia o lead, **Then** o lead é classificado como `QUALIFIED_NO_WEBSITE`.
 2. **Given** um lead onde o website aponta para redes sociais (ex: `instagram.com/oficinaexemplo`, `facebook.com/...`, `linktr.ee/...`, `wa.me/...`), **When** o classificador avalia o lead, **Then** o lead é classificado como `QUALIFIED_SOCIAL_ONLY` e o link da rede é preservado para o Módulo 2.
 3. **Given** um lead onde o website é um domínio próprio ativo (ex: `www.oficinaautopecas.com.br`), **When** o classificador avalia o lead, **Then** o lead é classificado como `DISQUALIFIED_HAS_WEBSITE`.
@@ -77,12 +81,13 @@ Mapear e minerar automaticamente comércios e prestadores de serviços no **Goog
 
 ### User Story 3 - Filtro de Reputação & Score Comercial (Priority: P2)
 
-*Como operador comercial, desejo priorizar automaticamente empresas com alta reputação local (nota >= 4.0 e pelo menos 5 avaliações) para focar abordagens em negócios que já faturam e têm clientes ativos.*
+_Como operador comercial, desejo priorizar automaticamente empresas com alta reputação local (nota >= 4.0 e pelo menos 5 avaliações) para focar abordagens em negócios que já faturam e têm clientes ativos._
 
 - **Why this priority:** Empresas com péssima reputação (ex: nota 2.5) ou abandonadas (0 avaliações) possuem baixa propensão de compra e alto risco de inadimplência.
 - **Independent Test:** Pode ser testado unitariamente passando objetos de leads com diferentes combinações de `rating` e `reviewCount` e validando o status de prioridade (`HIGH_PRIORITY`, `STANDARD_PRIORITY`, `LOW_PRIORITY`).
 
 **Acceptance Scenarios:**
+
 1. **Given** um lead sem site com nota 4.8 e 85 avaliações, **When** o avaliador de score processa o lead, **Then** ele é marcado como `HIGH_PRIORITY` (`score: 90+`).
 2. **Given** um lead sem site com nota 3.5 ou apenas 1 avaliação, **When** o avaliador de score processa o lead, **Then** ele é marcado como `LOW_PRIORITY` e arquivado para abordagem secundária.
 
@@ -90,12 +95,13 @@ Mapear e minerar automaticamente comércios e prestadores de serviços no **Goog
 
 ### User Story 4 - Normalização de Contatos & Deduplicação (Priority: P2)
 
-*Como sistema, desejo normalizar números de telefone para o formato padrão E.164 (ex: `+5511998765432`), identificar se é celular/WhatsApp ou fixo, e evitar leads duplicados na base de dados.*
+_Como sistema, desejo normalizar números de telefone para o formato padrão E.164 (ex: `+5511998765432`), identificar se é celular/WhatsApp ou fixo, e evitar leads duplicados na base de dados._
 
 - **Why this priority:** Sem telefones higienizados, o envio de abordagens comerciais por mensageria falha e números duplicados geram múltiplos contatos para a mesma empresa.
 - **Independent Test:** Testado com suíte de testes unitários contendo números nos formatos `(11) 99876-5432`, `11 3234-5678`, `+55 11 98888-7777`, garantindo que todos convertam para o padrão canônico e a chave de deduplicação previna duplicatas.
 
 **Acceptance Scenarios:**
+
 1. **Given** uma string de telefone brasileira com espaços, traços e parênteses, **When** a função de normalização executa, **Then** ela retorna o formato E.164 válido e sinaliza se é linha móvel (`isMobile: true`) ou fixa (`isMobile: false`).
 2. **Given** um lead minerado cuja URL do Maps ou par `nome + endereço normalizado` já existe no banco, **When** o processo de persistência executa, **Then** o registro existente é atualizado se houver dados novos, sem gerar lead duplicado.
 
@@ -150,14 +156,14 @@ Mapear e minerar automaticamente comércios e prestadores de serviços no **Goog
 ```typescript
 // Schemas compartilhados para o Módulo 1
 
-export type WebsiteClassification = 
-  | 'NO_WEBSITE'       // Não possui site cadastrado
-  | 'SOCIAL_ONLY'      // Aponta para Instagram, Facebook, Linktree, WhatsApp
-  | 'OWN_WEBSITE';     // Possui domínio próprio
+export type WebsiteClassification =
+  | 'NO_WEBSITE' // Não possui site cadastrado
+  | 'SOCIAL_ONLY' // Aponta para Instagram, Facebook, Linktree, WhatsApp
+  | 'OWN_WEBSITE'; // Possui domínio próprio
 
-export type QualificationStatus = 
-  | 'QUALIFIED'        // Aprovado para o funil (Visual Pitch)
-  | 'DISQUALIFIED';    // Descartado (já tem site ou fora dos padrões)
+export type QualificationStatus =
+  | 'QUALIFIED' // Aprovado para o funil (Visual Pitch)
+  | 'DISQUALIFIED'; // Descartado (já tem site ou fora dos padrões)
 
 export interface RawMapsLead {
   businessName: string;
@@ -196,13 +202,13 @@ export interface QualifiedLead {
 ## 6. Edge Cases & Mitigações
 
 1. **Google Maps exibindo página de consentimento de cookies ou Captcha:**
-   - *Mitigação:* Script de inicialização do Playwright com bypass de diálogo de consentimento de cookies da UE/Google e suporte a cookies persistentes.
+   - _Mitigação:_ Script de inicialização do Playwright com bypass de diálogo de consentimento de cookies da UE/Google e suporte a cookies persistentes.
 2. **Estabelecimento com múltiplas filiais no mesmo bairro:**
-   - *Mitigação:* Diferenciação por endereço completo e `mapsUrl` único com coordenadas geográficas.
+   - _Mitigação:_ Diferenciação por endereço completo e `mapsUrl` único com coordenadas geográficas.
 3. **Telefones no formato 0800 ou números internacionais:**
-   - *Mitigação:* Parser com biblioteca ou regex compatível que identifique prefixos fora do padrão móvel/fixo brasileiro e marque `isMobile: false`.
+   - _Mitigação:_ Parser com biblioteca ou regex compatível que identifique prefixos fora do padrão móvel/fixo brasileiro e marque `isMobile: false`.
 4. **Estabelecimento fechado permanentemente:**
-   - *Mitigação:* Detecção de tags `Fechado permanentemente` ou `Temporariamente fechado` no DOM para desqualificar imediatamente.
+   - _Mitigação:_ Detecção de tags `Fechado permanentemente` ou `Temporariamente fechado` no DOM para desqualificar imediatamente.
 
 ---
 

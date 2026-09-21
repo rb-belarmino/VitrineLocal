@@ -12,7 +12,7 @@ import { Logger } from '../shared/logger/logger';
 export function createApp(
   prismaClient?: PrismaClient,
   radarService?: RadarService,
-  brandService?: BrandExtractorService
+  brandService?: BrandExtractorService,
 ) {
   const app = express();
   const prisma = prismaClient ?? new PrismaClient();
@@ -39,7 +39,7 @@ export function createApp(
         success: false,
         error: err.name,
         message: err.message,
-        context: err.context
+        context: err.context,
       });
       return;
     }
@@ -48,7 +48,7 @@ export function createApp(
     res.status(500).json({
       success: false,
       error: 'InternalServerError',
-      message: 'Ocorreu um erro interno no servidor.'
+      message: 'Ocorreu um erro interno no servidor.',
     });
   });
 

@@ -15,7 +15,7 @@ export function createRadarRoutes(radarService: RadarService): Router {
       const parseResult = SearchParamsSchema.safeParse(req.body);
       if (!parseResult.success) {
         throw new ValidationError('Parâmetros de busca inválidos', {
-          issues: parseResult.error.format()
+          issues: parseResult.error.format(),
         });
       }
 
@@ -23,7 +23,7 @@ export function createRadarRoutes(radarService: RadarService): Router {
       res.status(202).json({
         success: true,
         message: 'Busca enfileirada com sucesso',
-        data: job
+        data: job,
       });
     } catch (error) {
       next(error);
@@ -46,14 +46,14 @@ export function createRadarRoutes(radarService: RadarService): Router {
       if (!jobDetails) {
         res.status(404).json({
           success: false,
-          error: 'Job não encontrado'
+          error: 'Job não encontrado',
         });
         return;
       }
 
       res.status(200).json({
         success: true,
-        data: jobDetails
+        data: jobDetails,
       });
     } catch (error) {
       next(error);
@@ -85,7 +85,7 @@ export function createRadarRoutes(radarService: RadarService): Router {
       res.status(200).json({
         success: true,
         total: leads.length,
-        data: leads
+        data: leads,
       });
     } catch (error) {
       next(error);

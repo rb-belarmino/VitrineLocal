@@ -38,7 +38,7 @@ export function parseReviewsFromHtml(html: string): RawReview[] {
         authorName: authorName || 'Cliente Google',
         rating: isNaN(rating) ? 5 : rating,
         relativeTime,
-        text
+        text,
       };
       if (authorPhotoUrl) {
         reviewItem.authorPhotoUrl = authorPhotoUrl;
@@ -57,7 +57,11 @@ export class MapsReviewScraper {
       await page.goto(mapsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
 
       // Tenta clicar na aba "Avaliações" se estiver visível
-      const reviewsTab = page.locator('button[role="tab"]:has-text("Avaliações"), button[role="tab"]:has-text("Comentários")').first();
+      const reviewsTab = page
+        .locator(
+          'button[role="tab"]:has-text("Avaliações"), button[role="tab"]:has-text("Comentários")',
+        )
+        .first();
       if (await reviewsTab.isVisible({ timeout: 2000 }).catch(() => false)) {
         await reviewsTab.click().catch(() => {});
         await page.waitForTimeout(1000);
@@ -67,7 +71,10 @@ export class MapsReviewScraper {
       const moreButtons = page.locator('button.w8nwRe, button:has-text("Mais")');
       const count = await moreButtons.count().catch(() => 0);
       for (let i = 0; i < Math.min(count, 5); i++) {
-        await moreButtons.nth(i).click().catch(() => {});
+        await moreButtons
+          .nth(i)
+          .click()
+          .catch(() => {});
       }
 
       const html = await page.content();
@@ -77,7 +84,7 @@ export class MapsReviewScraper {
     } catch (err) {
       Logger.warn(
         `Falha ao extrair avaliações do Google Maps para ${mapsUrl}`,
-        err instanceof Error ? { error: err.message } : { error: String(err) }
+        err instanceof Error ? { error: err.message } : { error: String(err) },
       );
       return [];
     }

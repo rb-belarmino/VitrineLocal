@@ -7,15 +7,17 @@ Este documento registra as pesquisas técnicas, decisões de arquitetura e mitig
 ## 1. Pesquisa & Decisões Tecnológicas
 
 ### 1.1 Motor de Automação Headless: Playwright vs. Puppeteer vs. Cheerio/HTTP Direto
+
 - **Decisão:** `Playwright` com Chromium headless.
 - **Racional:**
   - O Google Maps é uma Single Page Application (SPA) ultra-dinâmica baseada em WebGL, Canvas e renderização assíncrona pesada. Requer execução real de JavaScript e emulação precisa de viewport.
   - O Playwright possui suporte nativo a isolamento de contexto (`browser.newContext()`), interceptação de rotas para desabilitar carregamento de imagens/fontes pesadas (economizando 70% de banda e acelerando a raspagem), além de auto-waiting robusto para seletores dinâmicos.
 - **Alternativas descartadas:**
-  - *HTTP direto / Cheerio / Axios:* O HTML estático do Google Maps não contém os estabelecimentos buscados (o feed é injetado via RPC/JSON interno cifrado após boot do JavaScript).
-  - *Puppeteer:* Menos flexível no gerenciamento de múltiplos contextos isolados e suporte cross-platform comparado ao Playwright.
+  - _HTTP direto / Cheerio / Axios:_ O HTML estático do Google Maps não contém os estabelecimentos buscados (o feed é injetado via RPC/JSON interno cifrado após boot do JavaScript).
+  - _Puppeteer:_ Menos flexível no gerenciamento de múltiplos contextos isolados e suporte cross-platform comparado ao Playwright.
 
 ### 1.2 Estratégia Anti-Bloqueio & Evasão de Detecção (Stealth Scraper)
+
 - **Decisão:** Execução com flags de isolamento Chromium + mascaramento de `navigator.webdriver` + delays humanos gaussianos + rotação de User-Agent.
 - **Racional:**
   - O Google Maps detecta bots através da flag `navigator.webdriver = true` e padrões de requisições sobre-humanas (rolagens instantâneas de 0ms).
@@ -25,9 +27,10 @@ Este documento registra as pesquisas técnicas, decisões de arquitetura e mitig
     - Viewport padrão de desktop (`1280x800`);
     - Descarte de requisições de telemetria desnecessárias.
 - **Alternativas consideradas:**
-  - *API Oficial Google Places:* Descartada pelo requisito central do projeto de operar com custo zero de infraestrutura na mineração inicial de prospecção.
+  - _API Oficial Google Places:_ Descartada pelo requisito central do projeto de operar com custo zero de infraestrutura na mineração inicial de prospecção.
 
 ### 1.3 Estratégia de Testes TDD & Offline Fixtures
+
 - **Decisão:** Testes desacoplados com **HTML Fixtures estáticas** gravadas do Google Maps + Vitest.
 - **Racional:**
   - Fazer testes automatizados batendo na web real do Google Maps causaria:
@@ -38,6 +41,7 @@ Este documento registra as pesquisas técnicas, decisões de arquitetura e mitig
   - Testes E2E reais de ponta a ponta ficam separados em suíte específica de fumaça (smoke test).
 
 ### 1.4 Normalização Telefônica Brasileira (E.164 & WhatsApp Validation)
+
 - **Decisão:** Módulo utilitário proprietário tipado com regex e validação de DDDs da ANATEL.
 - **Racional:**
   - O formato brasileiro possui particularidades críticas:
@@ -47,6 +51,7 @@ Este documento registra as pesquisas técnicas, decisões de arquitetura e mitig
   - O normalizador converterá todos para o formato canônico E.164 (`+5511987654321`), adicionando a tag booleana `isMobile: true/false` para alimentar a prospecção de WhatsApp.
 
 ### 1.5 Classificador Determinístico de Websites
+
 - **Decisão:** Parser baseado no objeto `URL` nativo do Node.js com whitelist categorizada de domínios sociais e blacklist de domínios genéricos.
 - **Racional:**
   - Empresas sem site comumente colocam no campo de website:
@@ -58,6 +63,7 @@ Este documento registra as pesquisas técnicas, decisões de arquitetura e mitig
   - A lógica identifica se o hostname pertence a essas redes para classificar o lead como `SOCIAL_ONLY` (altíssimo potencial de conversão). Se for um domínio genérico com TLD próprio (ex: `.com.br`, `.com`), classifica como `OWN_WEBSITE`.
 
 ### 1.6 Banco de Dados e Persistência Leve
+
 - **Decisão:** SQLite com **Prisma ORM** (`@prisma/client` + `prisma`) integrado via Repository Pattern.
 - **Racional:**
   - O Prisma ORM oferece client com tipagem estrita gerada automaticamente a partir do `schema.prisma`, migrações declarativas simples e excelente DX.

@@ -24,5 +24,5 @@ export const MapsSelectors = {
   externalLink: 'a.lcr4fd',
 
   // Elemento que sinaliza o final dos resultados na região
-  endOfFeedNotice: 'div.HlvSq'
+  endOfFeedNotice: 'div.HlvSq',
 } as const;

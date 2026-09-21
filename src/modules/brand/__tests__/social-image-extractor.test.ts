@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { parseInstagramPublicImage, SocialImageExtractor } from '../adapters/social-image-extractor';
+import {
+  parseInstagramPublicImage,
+  SocialImageExtractor,
+} from '../adapters/social-image-extractor';
 
 describe('SocialImageExtractor (Unit)', () => {
   it('deve extrair og:image de metatags públicas de uma página de rede social', () => {

@@ -25,7 +25,7 @@ export class JobQueue {
         handler,
         resolve: resolve as (value: unknown) => void,
         reject,
-        enqueuedAt: new Date()
+        enqueuedAt: new Date(),
       };
 
       this.queue.push(queuedJob as QueuedJob<unknown>);

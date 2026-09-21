@@ -22,22 +22,28 @@ export class RadarService implements IRadarService {
    * Enfileira a busca na fila FIFO com concorrência máxima de 1 job ativo.
    * Retorna imediatamente o jobId com status PENDING.
    */
-  public async enqueueSearchJob(params: SearchParams): Promise<{ jobId: string; status: 'PENDING' }> {
+  public async enqueueSearchJob(
+    params: SearchParams,
+  ): Promise<{ jobId: string; status: 'PENDING' }> {
     const jobRecord = await this.repository.createSearchJob(params);
     const jobId = jobRecord.id;
 
-    Logger.info(`Recebida requisição de busca. Criado job ${jobId} para "${params.niche} em ${params.location}"`);
+    Logger.info(
+      `Recebida requisição de busca. Criado job ${jobId} para "${params.niche} em ${params.location}"`,
+    );
 
     // Dispara a execução assíncrona na fila sem bloquear a resposta HTTP
-    void globalJobQueue.enqueue(jobId, async () => {
-      await this.executeJob(jobId, params);
-    }).catch(error => {
-      Logger.error(`Erro não capturado na execução do job ${jobId}`, error);
-    });
+    void globalJobQueue
+      .enqueue(jobId, async () => {
+        await this.executeJob(jobId, params);
+      })
+      .catch((error) => {
+        Logger.error(`Erro não capturado na execução do job ${jobId}`, error);
+      });
 
     return {
       jobId,
-      status: 'PENDING'
+      status: 'PENDING',
     };
   }
 
@@ -72,9 +78,16 @@ export class RadarService implements IRadarService {
         }
       }
 
-      await this.repository.updateSearchJobMetrics(jobId, totalFound, totalQualified, totalDisqualified);
+      await this.repository.updateSearchJobMetrics(
+        jobId,
+        totalFound,
+        totalQualified,
+        totalDisqualified,
+      );
       await this.repository.updateSearchJobStatus(jobId, 'COMPLETED');
-      Logger.info(`Job ${jobId} finalizado com sucesso. Qualificados: ${totalQualified}/${totalFound}`);
+      Logger.info(
+        `Job ${jobId} finalizado com sucesso. Qualificados: ${totalQualified}/${totalFound}`,
+      );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       await this.repository.updateSearchJobStatus(jobId, 'FAILED', errorMsg);
@@ -102,14 +115,18 @@ export class RadarService implements IRadarService {
       errorMessage: job.errorMessage,
       startedAt: job.startedAt,
       finishedAt: job.finishedAt,
-      leads: job.leads
+      leads: job.leads,
     };
   }
 
   /**
    * Retorna os leads qualificados persistidos.
    */
-  public async getQualifiedLeads(filters?: { niche?: string; location?: string; minScore?: number }): Promise<QualifiedLead[]> {
+  public async getQualifiedLeads(filters?: {
+    niche?: string;
+    location?: string;
+    minScore?: number;
+  }): Promise<QualifiedLead[]> {
     return this.repository.getQualifiedLeads(filters);
   }
 
@@ -118,6 +135,6 @@ export class RadarService implements IRadarService {
    */
   public async getLeadById(id: string): Promise<QualifiedLead | null> {
     const leads = await this.repository.getQualifiedLeads();
-    return leads.find(l => l.id === id) ?? null;
+    return leads.find((l) => l.id === id) ?? null;
   }
 }

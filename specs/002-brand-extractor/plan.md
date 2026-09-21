@@ -17,6 +17,7 @@ O Módulo 2 (Brand Extractor) é o motor de identidade visual e enriquecimento s
 **Language/Version**: Node.js 24 LTS (24.18/24.21), TypeScript 5.7+ com tipagem estrita (`strict: true`, zero `any` não justificado, `exactOptionalPropertyTypes: true`).
 
 **Primary Dependencies**:
+
 - `@prisma/client` + `prisma` (ORM com SQLite).
 - `express` + `@types/express` (REST API).
 - `playwright` (extração de imagens e depoimentos do perfil Google Maps).
@@ -41,7 +42,7 @@ O Módulo 2 (Brand Extractor) é o motor de identidade visual e enriquecimento s
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - [x] **I. TDD (Test-Driven Development)**: Nenhum código de produção é criado sem teste prévio (Red -> Green -> Refactor). Cobertura unitária/integração com Vitest >= 85%.
 - [x] **II. Production-Ready CI & Strict Quality Gates**: Código deve compilar com zero erros de typecheck, zero warnings de ESLint, zero vulnerabilidades altas/críticas no `npm audit` e 100% dos testes verdes.
@@ -111,6 +112,6 @@ src/
 
 ## Complexity Tracking
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| Nenhuma | N/A | Arquitetura mantém-se minimalista, usando Prisma + SQLite sem serviços extras como Redis |
+| Violation | Why Needed | Simpler Alternative Rejected Because                                                     |
+| --------- | ---------- | ---------------------------------------------------------------------------------------- |
+| Nenhuma   | N/A        | Arquitetura mantém-se minimalista, usando Prisma + SQLite sem serviços extras como Redis |

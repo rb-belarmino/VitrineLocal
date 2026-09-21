@@ -19,7 +19,7 @@ export class LeadPersister {
     const scoreResult = LeadScorer.evaluate({
       websiteType: websiteResult.type,
       rating: rawLead.rating,
-      reviewCount: rawLead.reviewCount
+      reviewCount: rawLead.reviewCount,
     });
 
     // 3. Normalização telefônica
@@ -27,7 +27,8 @@ export class LeadPersister {
 
     // Determina status e motivo de descarte
     const status = scoreResult.status;
-    const disqualificationReason = scoreResult.disqualificationReason ?? websiteResult.disqualificationReason;
+    const disqualificationReason =
+      scoreResult.disqualificationReason ?? websiteResult.disqualificationReason;
 
     const qualifiedLead: QualifiedLead = {
       id: randomUUID(),
@@ -48,7 +49,7 @@ export class LeadPersister {
       mapsUrl: rawLead.mapsUrl,
       searchJobId,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     // 4. Salva idempotentemente no repositório Prisma

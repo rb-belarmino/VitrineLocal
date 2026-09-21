@@ -6,7 +6,7 @@ import { Logger } from '../../../shared/logger/logger';
 export function generateFallbackContent(
   businessName: string,
   category: string,
-  testimonials: TestimonialItem[] = []
+  testimonials: TestimonialItem[] = [],
 ): SemanticContent {
   const hasReviews = testimonials.length > 0;
   const reviewNote = hasReviews
@@ -21,9 +21,9 @@ export function generateFallbackContent(
       `Atendimento Especializado em ${category}`,
       'Diagnóstico e Orçamento Sem Compromisso',
       'Profissionais Experientes e Qualificados',
-      'Garantia de Qualidade e Satisfação'
+      'Garantia de Qualidade e Satisfação',
     ],
-    callToAction: 'Entre em contato pelo WhatsApp agora mesmo e tire suas dúvidas!'
+    callToAction: 'Entre em contato pelo WhatsApp agora mesmo e tire suas dúvidas!',
   };
 }
 
@@ -41,10 +41,12 @@ export class GeminiSynthesizer {
   async synthesize(
     businessName: string,
     category: string,
-    testimonials: TestimonialItem[] = []
+    testimonials: TestimonialItem[] = [],
   ): Promise<SemanticContent> {
     if (!this.client || !process.env['GEMINI_API_KEY']) {
-      Logger.info(`GEMINI_API_KEY não configurada. Utilizando sintetizador semântico fallback para ${businessName}.`);
+      Logger.info(
+        `GEMINI_API_KEY não configurada. Utilizando sintetizador semântico fallback para ${businessName}.`,
+      );
       return generateFallbackContent(businessName, category, testimonials);
     }
 
@@ -73,12 +75,15 @@ Retorne ESTRITAMENTE um objeto JSON válido (sem tags markdown nem explicações
 
       const response = await this.client.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: prompt
+        contents: prompt,
       });
 
       const responseText = response.text || '';
       // Remove possíveis marcadores markdown de bloco de código json
-      const cleaned = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+      const cleaned = responseText
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
       const parsed = JSON.parse(cleaned);
 
       const validated = SemanticContentSchema.parse(parsed);
@@ -86,7 +91,7 @@ Retorne ESTRITAMENTE um objeto JSON válido (sem tags markdown nem explicações
     } catch (err) {
       Logger.warn(
         `Falha na chamada da Gemini API para sintetizar conteúdo de ${businessName}. Acionando fallback.`,
-        err instanceof Error ? { error: err.message } : { error: String(err) }
+        err instanceof Error ? { error: err.message } : { error: String(err) },
       );
       return generateFallbackContent(businessName, category, testimonials);
     }

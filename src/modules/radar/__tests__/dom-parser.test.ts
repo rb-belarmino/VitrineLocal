@@ -19,7 +19,7 @@ describe('DomParser (Offline HTML Fixtures)', () => {
 
   it('deve extrair os dados completos de um estabelecimento sem website', () => {
     const leads = DomParser.parseFeedCards(htmlContent);
-    const moema = leads.find(l => l.businessName.includes('Auto Mecânica Moema Express'));
+    const moema = leads.find((l) => l.businessName.includes('Auto Mecânica Moema Express'));
 
     expect(moema).toBeDefined();
     expect(moema?.businessName).toBe('Auto Mecânica Moema Express');
@@ -34,7 +34,7 @@ describe('DomParser (Offline HTML Fixtures)', () => {
 
   it('deve extrair website de rede social quando presente', () => {
     const leads = DomParser.parseFeedCards(htmlContent);
-    const odonto = leads.find(l => l.businessName.includes('Studio Odonto'));
+    const odonto = leads.find((l) => l.businessName.includes('Studio Odonto'));
 
     expect(odonto).toBeDefined();
     expect(odonto?.website).toBe('https://www.instagram.com/studioodontovilanova');
@@ -42,7 +42,7 @@ describe('DomParser (Offline HTML Fixtures)', () => {
 
   it('deve extrair website próprio quando presente', () => {
     const leads = DomParser.parseFeedCards(htmlContent);
-    const paulista = leads.find(l => l.businessName.includes('Centro Automotivo Paulista'));
+    const paulista = leads.find((l) => l.businessName.includes('Centro Automotivo Paulista'));
 
     expect(paulista).toBeDefined();
     expect(paulista?.website).toBe('https://www.centroautomotivopaulista.com.br');

@@ -10,8 +10,17 @@ export interface LeadFilters {
 
 export interface ILeadRepository {
   createSearchJob(params: SearchParams): Promise<{ id: string }>;
-  updateSearchJobStatus(jobId: string, status: 'RUNNING' | 'COMPLETED' | 'FAILED', errorMessage?: string): Promise<void>;
-  updateSearchJobMetrics(jobId: string, totalFound: number, totalQualified: number, totalDisqualified: number): Promise<void>;
+  updateSearchJobStatus(
+    jobId: string,
+    status: 'RUNNING' | 'COMPLETED' | 'FAILED',
+    errorMessage?: string,
+  ): Promise<void>;
+  updateSearchJobMetrics(
+    jobId: string,
+    totalFound: number,
+    totalQualified: number,
+    totalDisqualified: number,
+  ): Promise<void>;
   saveLead(lead: QualifiedLead, searchJobId?: string): Promise<void>;
   getLeadByMapsUrl(mapsUrl: string): Promise<QualifiedLead | null>;
   getQualifiedLeads(filters?: LeadFilters): Promise<QualifiedLead[]>;
@@ -40,32 +49,41 @@ export class PrismaLeadRepository implements ILeadRepository {
         niche: params.niche,
         location: params.location,
         limitRequested: params.limit,
-        status: 'PENDING'
+        status: 'PENDING',
       },
-      select: { id: true }
+      select: { id: true },
     });
     return { id: job.id };
   }
 
-  public async updateSearchJobStatus(jobId: string, status: 'RUNNING' | 'COMPLETED' | 'FAILED', errorMessage?: string): Promise<void> {
+  public async updateSearchJobStatus(
+    jobId: string,
+    status: 'RUNNING' | 'COMPLETED' | 'FAILED',
+    errorMessage?: string,
+  ): Promise<void> {
     await this.prisma.searchJob.update({
       where: { id: jobId },
       data: {
         status,
         errorMessage: errorMessage ?? null,
-        finishedAt: status === 'COMPLETED' || status === 'FAILED' ? new Date() : null
-      }
+        finishedAt: status === 'COMPLETED' || status === 'FAILED' ? new Date() : null,
+      },
     });
   }
 
-  public async updateSearchJobMetrics(jobId: string, totalFound: number, totalQualified: number, totalDisqualified: number): Promise<void> {
+  public async updateSearchJobMetrics(
+    jobId: string,
+    totalFound: number,
+    totalQualified: number,
+    totalDisqualified: number,
+  ): Promise<void> {
     await this.prisma.searchJob.update({
       where: { id: jobId },
       data: {
         totalFound,
         totalQualified,
-        totalDisqualified
-      }
+        totalDisqualified,
+      },
     });
   }
 
@@ -89,7 +107,7 @@ export class PrismaLeadRepository implements ILeadRepository {
         status: lead.status,
         disqualificationReason: lead.disqualificationReason ?? null,
         mapsUrl: lead.mapsUrl,
-        searchJobId: searchJobId ?? lead.searchJobId ?? null
+        searchJobId: searchJobId ?? lead.searchJobId ?? null,
       },
       update: {
         businessName: lead.businessName,
@@ -101,14 +119,14 @@ export class PrismaLeadRepository implements ILeadRepository {
         phoneNormalized: lead.phoneNormalized,
         isMobile: lead.isMobile,
         websiteRaw: lead.websiteRaw,
-        websiteType: lead.websiteType
-      }
+        websiteType: lead.websiteType,
+      },
     });
   }
 
   public async getLeadByMapsUrl(mapsUrl: string): Promise<QualifiedLead | null> {
     const record = await this.prisma.qualifiedLead.findUnique({
-      where: { mapsUrl }
+      where: { mapsUrl },
     });
     if (!record) return null;
     return this.mapToDomain(record);
@@ -120,20 +138,22 @@ export class PrismaLeadRepository implements ILeadRepository {
         status: filters?.status ?? 'QUALIFIED',
         ...(filters?.niche ? { category: { contains: filters.niche } } : {}),
         ...(filters?.location ? { address: { contains: filters.location } } : {}),
-        ...(filters?.minScore !== undefined ? { qualificationScore: { gte: filters.minScore } } : {})
+        ...(filters?.minScore !== undefined
+          ? { qualificationScore: { gte: filters.minScore } }
+          : {}),
       },
-      orderBy: { qualificationScore: 'desc' }
+      orderBy: { qualificationScore: 'desc' },
     });
 
-    return records.map(r => this.mapToDomain(r));
+    return records.map((r) => this.mapToDomain(r));
   }
 
   public async getJobById(jobId: string) {
     const job = await this.prisma.searchJob.findUnique({
       where: { id: jobId },
       include: {
-        leads: true
-      }
+        leads: true,
+      },
     });
 
     if (!job) return null;
@@ -150,7 +170,7 @@ export class PrismaLeadRepository implements ILeadRepository {
       errorMessage: job.errorMessage,
       startedAt: job.startedAt,
       finishedAt: job.finishedAt,
-      leads: job.leads.map(l => this.mapToDomain(l))
+      leads: job.leads.map((l) => this.mapToDomain(l)),
     };
   }
 
@@ -201,7 +221,7 @@ export class PrismaLeadRepository implements ILeadRepository {
       mapsUrl: record.mapsUrl,
       searchJobId: record.searchJobId ?? undefined,
       createdAt: record.createdAt,
-      updatedAt: record.updatedAt
+      updatedAt: record.updatedAt,
     };
   }
 }

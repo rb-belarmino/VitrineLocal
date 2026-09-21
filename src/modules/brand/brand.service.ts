@@ -18,7 +18,7 @@ export class BrandExtractorService {
     private readonly imageExtractor: MapsImageExtractor = new MapsImageExtractor(),
     private readonly socialExtractor: SocialImageExtractor = new SocialImageExtractor(),
     private readonly reviewScraper: MapsReviewScraper = new MapsReviewScraper(),
-    private readonly synthesizer: GeminiSynthesizer = new GeminiSynthesizer()
+    private readonly synthesizer: GeminiSynthesizer = new GeminiSynthesizer(),
   ) {}
 
   async getBrandProfile(leadId: string): Promise<BrandProfileResponse> {
@@ -98,7 +98,7 @@ export class BrandExtractorService {
       const content = await this.synthesizer.synthesize(
         lead.businessName,
         lead.category,
-        testimonials
+        testimonials,
       );
 
       // 6. Persistência via Repositório
@@ -110,15 +110,17 @@ export class BrandExtractorService {
         palette,
         content,
         testimonials,
-        status: 'COMPLETED'
+        status: 'COMPLETED',
       });
 
-      Logger.info(`BrandProfile extraído e persistido com sucesso para ${lead.businessName} (${leadId})`);
+      Logger.info(
+        `BrandProfile extraído e persistido com sucesso para ${lead.businessName} (${leadId})`,
+      );
       return savedProfile;
     } catch (err: unknown) {
       Logger.error(
         `Erro durante extração de marca para o lead ${leadId}`,
-        err instanceof Error ? { message: err.message, stack: err.stack } : { error: String(err) }
+        err instanceof Error ? { message: err.message, stack: err.stack } : { error: String(err) },
       );
       throw err;
     } finally {

@@ -37,7 +37,8 @@ export class DomParser {
       // Contagem de avaliações: "(128)" -> 128
       const reviewCountStr = card.find(MapsSelectors.reviewCountText).text().trim();
       const reviewCountMatch = reviewCountStr.match(/\d+/);
-      const reviewCount = reviewCountMatch && reviewCountMatch[0] ? parseInt(reviewCountMatch[0], 10) : 0;
+      const reviewCount =
+        reviewCountMatch && reviewCountMatch[0] ? parseInt(reviewCountMatch[0], 10) : 0;
 
       // Categoria e detalhes secundários
       let category = 'Serviços Locais';
@@ -56,7 +57,12 @@ export class DomParser {
         }
 
         // Identifica endereço (geralmente contém Rua, Av., Alameda, ou traço de bairro/cidade)
-        if (text.includes('Av.') || text.includes('Rua') || text.includes('Alameda') || text.includes(' - ')) {
+        if (
+          text.includes('Av.') ||
+          text.includes('Rua') ||
+          text.includes('Alameda') ||
+          text.includes(' - ')
+        ) {
           if (!address && !text.includes('(') && !text.includes('·')) {
             address = text;
           }
@@ -84,7 +90,7 @@ export class DomParser {
         website,
         rating,
         reviewCount,
-        mapsUrl
+        mapsUrl,
       });
     });
 

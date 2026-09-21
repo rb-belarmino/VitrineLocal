@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { BrandExtractorService } from '../../modules/brand/brand.service';
 import {
   ExtractBrandParamsSchema,
-  ExtractBrandQuerySchema
+  ExtractBrandQuerySchema,
 } from '../../modules/brand/schemas/brand.schemas';
 import { ValidationError } from '../../shared/errors/app-error';
 
@@ -16,14 +16,14 @@ export function createBrandRoutes(brandService: BrandExtractorService): Router {
       if (!parsedParams.success) {
         throw new ValidationError(
           'Parâmetro leadId inválido. Deve ser um UUID.',
-          parsedParams.error.format() as unknown as Record<string, unknown>
+          parsedParams.error.format() as unknown as Record<string, unknown>,
         );
       }
 
       const profile = await brandService.getBrandProfile(parsedParams.data.leadId);
       res.status(200).json({
         success: true,
-        data: profile
+        data: profile,
       });
     } catch (err) {
       next(err);
@@ -37,7 +37,7 @@ export function createBrandRoutes(brandService: BrandExtractorService): Router {
       if (!parsedParams.success) {
         throw new ValidationError(
           'Parâmetro leadId inválido. Deve ser um UUID.',
-          parsedParams.error.format() as unknown as Record<string, unknown>
+          parsedParams.error.format() as unknown as Record<string, unknown>,
         );
       }
 
@@ -47,7 +47,7 @@ export function createBrandRoutes(brandService: BrandExtractorService): Router {
       const profile = await brandService.extractBrand(parsedParams.data.leadId, force);
       res.status(200).json({
         success: true,
-        data: profile
+        data: profile,
       });
     } catch (err) {
       next(err);

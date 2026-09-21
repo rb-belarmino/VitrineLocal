@@ -12,16 +12,16 @@ export default tseslint.config(
       'specs/**',
       '.specify/**',
       '*.config.mjs',
-      '*.config.ts'
-    ]
+      '*.config.ts',
+    ],
   },
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { 'argsIgnorePattern': '^_', 'varsIgnorePattern': '^_' }
-      ]
-    }
-  }
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+    },
+  },
 );

@@ -4,7 +4,7 @@ export abstract class AppError extends Error {
 
   constructor(
     message: string,
-    public readonly context?: Record<string, unknown>
+    public readonly context?: Record<string, unknown>,
   ) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);

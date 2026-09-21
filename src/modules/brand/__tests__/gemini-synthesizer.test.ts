@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { GoogleGenAI } from '@google/genai';
-import {
-  generateFallbackContent,
-  GeminiSynthesizer
-} from '../adapters/gemini-synthesizer';
+import { generateFallbackContent, GeminiSynthesizer } from '../adapters/gemini-synthesizer';
 import { SemanticContentSchema } from '../schemas/brand.schemas';
 
 describe('GeminiSynthesizer (Unit)', () => {
@@ -26,8 +23,8 @@ describe('GeminiSynthesizer (Unit)', () => {
           authorName: 'Carlos',
           rating: 5,
           relativeTime: 'há 1 semana',
-          text: 'Fizeram a troca de correia dentada perfeitamente.'
-        }
+          text: 'Fizeram a troca de correia dentada perfeitamente.',
+        },
       ];
 
       const content = generateFallbackContent('Oficina Moema', 'Oficina Mecânica', testimonials);
@@ -56,8 +53,8 @@ describe('GeminiSynthesizer (Unit)', () => {
 
       const mockClient = {
         models: {
-          generateContent: vi.fn().mockRejectedValue(new Error('Quota exceeded 429'))
-        }
+          generateContent: vi.fn().mockRejectedValue(new Error('Quota exceeded 429')),
+        },
       };
 
       const synthesizer = new GeminiSynthesizer(mockClient as unknown as GoogleGenAI);
@@ -76,14 +73,14 @@ describe('GeminiSynthesizer (Unit)', () => {
           subheadline: 'Tratamentos modernos e humanizados no coração do bairro',
           aboutText: 'Na Clínica Sorriso cuidamos de cada detalhe do seu sorriso com tecnologia.',
           keyServices: ['Implantes', 'Clareamento Dental', 'Ortodontia'],
-          callToAction: 'Agende sua avaliação pelo WhatsApp agora mesmo!'
-        })
+          callToAction: 'Agende sua avaliação pelo WhatsApp agora mesmo!',
+        }),
       };
 
       const mockClient = {
         models: {
-          generateContent: vi.fn().mockResolvedValue(mockApiResponse)
-        }
+          generateContent: vi.fn().mockResolvedValue(mockApiResponse),
+        },
       };
 
       const synthesizer = new GeminiSynthesizer(mockClient as unknown as GoogleGenAI);

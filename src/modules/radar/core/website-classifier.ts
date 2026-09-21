@@ -23,18 +23,23 @@ export class WebsiteClassifier {
     'bio.link',
     'ifood.com.br',
     'cardapio.digital',
-    'ola.click'
+    'ola.click',
   ];
 
   /**
    * Classifica a URL do estabelecimento.
    */
   public static classify(rawUrl: string | null | undefined): ClassificationResult {
-    if (!rawUrl || typeof rawUrl !== 'string' || rawUrl.trim() === '' || rawUrl.trim() === 'about:blank') {
+    if (
+      !rawUrl ||
+      typeof rawUrl !== 'string' ||
+      rawUrl.trim() === '' ||
+      rawUrl.trim() === 'about:blank'
+    ) {
       return {
         type: 'NO_WEBSITE',
         isQualified: true,
-        socialLinks: []
+        socialLinks: [],
       };
     }
 
@@ -42,30 +47,31 @@ export class WebsiteClassifier {
     let parsedUrl: URL;
 
     try {
-      const withProtocol = trimmed.startsWith('http://') || trimmed.startsWith('https://') 
-        ? trimmed 
-        : `https://${trimmed}`;
+      const withProtocol =
+        trimmed.startsWith('http://') || trimmed.startsWith('https://')
+          ? trimmed
+          : `https://${trimmed}`;
       parsedUrl = new URL(withProtocol);
     } catch {
       // Se não for possível parsear como URL válida, trata como sem website
       return {
         type: 'NO_WEBSITE',
         isQualified: true,
-        socialLinks: []
+        socialLinks: [],
       };
     }
 
     const hostname = parsedUrl.hostname.toLowerCase().replace(/^www\./, '');
 
-    const isSocial = this.SOCIAL_DOMAINS.some(domain => 
-      hostname === domain || hostname.endsWith(`.${domain}`)
+    const isSocial = this.SOCIAL_DOMAINS.some(
+      (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
     );
 
     if (isSocial) {
       return {
         type: 'SOCIAL_ONLY',
         isQualified: true,
-        socialLinks: [trimmed]
+        socialLinks: [trimmed],
       };
     }
 
@@ -73,7 +79,7 @@ export class WebsiteClassifier {
       type: 'OWN_WEBSITE',
       isQualified: false,
       socialLinks: [],
-      disqualificationReason: 'HAS_WEBSITE'
+      disqualificationReason: 'HAS_WEBSITE',
     };
   }
 }

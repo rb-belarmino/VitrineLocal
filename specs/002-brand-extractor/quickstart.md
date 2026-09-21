@@ -11,7 +11,7 @@ Este guia demonstra como validar e executar a extração de identidade de marca 
    ```env
    GEMINI_API_KEY="sua-chave-gemini-aqui"
    ```
-   *(Nota: O sistema possui fallback resiliente se a chave não estiver presente ou a rede oscilar).*
+   _(Nota: O sistema possui fallback resiliente se a chave não estiver presente ou a rede oscilar)._
 
 ---
 
@@ -26,6 +26,7 @@ npm run dev
 ## 3. Disparar Enriquecimento de Marca
 
 ### Requisição REST Client / cURL
+
 ```http
 POST http://localhost:3001/api/brand/extract/{{leadId}}
 Content-Type: application/json
@@ -37,6 +38,7 @@ curl -X POST http://localhost:3001/api/brand/extract/<LEAD_UUID> \
 ```
 
 ### Resposta Esperada (`200 OK`)
+
 ```json
 {
   "success": true,

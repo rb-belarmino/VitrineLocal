@@ -7,7 +7,7 @@ describe('JobQueue (FIFO Execution)', () => {
     const order: number[] = [];
 
     const p1 = queue.enqueue('job-1', async () => {
-      await new Promise(r => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 20));
       order.push(1);
       return 'res-1';
     });

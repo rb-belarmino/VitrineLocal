@@ -6,17 +6,17 @@ describe('WebsiteClassifier (Filtro Anti-Site)', () => {
     expect(WebsiteClassifier.classify(null)).toEqual({
       type: 'NO_WEBSITE',
       isQualified: true,
-      socialLinks: []
+      socialLinks: [],
     });
     expect(WebsiteClassifier.classify('')).toEqual({
       type: 'NO_WEBSITE',
       isQualified: true,
-      socialLinks: []
+      socialLinks: [],
     });
     expect(WebsiteClassifier.classify('   ')).toEqual({
       type: 'NO_WEBSITE',
       isQualified: true,
-      socialLinks: []
+      socialLinks: [],
     });
   });
 
@@ -25,7 +25,7 @@ describe('WebsiteClassifier (Filtro Anti-Site)', () => {
       'https://www.instagram.com/oficinadopedro',
       'http://instagram.com/clinica.sorriso',
       'https://instagr.am/hamburgueria',
-      'https://instagram.com/p/B9xyz/'
+      'https://instagram.com/p/B9xyz/',
     ];
 
     for (const url of urls) {
@@ -40,7 +40,7 @@ describe('WebsiteClassifier (Filtro Anti-Site)', () => {
     const urls = [
       'https://facebook.com/mecanica.auto',
       'https://www.facebook.com/pages/Padaria-Central/12345',
-      'https://fb.me/pizzariadoze'
+      'https://fb.me/pizzariadoze',
     ];
 
     for (const url of urls) {
@@ -57,7 +57,7 @@ describe('WebsiteClassifier (Filtro Anti-Site)', () => {
       'https://api.whatsapp.com/send?phone=5511998765432',
       'https://beacons.ai/salaodebeleza',
       'https://bio.link/dentistasp',
-      'https://tiktok.com/@barbearia'
+      'https://tiktok.com/@barbearia',
     ];
 
     for (const url of urls) {
@@ -72,7 +72,7 @@ describe('WebsiteClassifier (Filtro Anti-Site)', () => {
       'https://www.centroautomotivopaulista.com.br',
       'http://oficinadopedro.com',
       'https://clinicasilva.med.br',
-      'https://restauranteportugues.com.br/cardapio'
+      'https://restauranteportugues.com.br/cardapio',
     ];
 
     for (const url of urls) {

@@ -62,7 +62,7 @@ export function calculateContrastRatio(hex1: string, hex2: string): number {
  */
 export function ensureAccessibleContrast(
   primaryHex: string,
-  suggestedBg = '#FFFFFF'
+  suggestedBg = '#FFFFFF',
 ): {
   primaryColor: string;
   secondaryColor: string;
@@ -88,13 +88,14 @@ export function ensureAccessibleContrast(
   const secR = Math.min(255, Math.floor(rgb.g * 0.8 + 30));
   const secG = Math.min(255, Math.floor(rgb.b * 0.9 + 20));
   const secB = Math.min(255, Math.floor(rgb.r * 0.85 + 25));
-  const secondaryColor = `#${secR.toString(16).padStart(2, '0')}${secG.toString(16).padStart(2, '0')}${secB.toString(16).padStart(2, '0')}`.toUpperCase();
+  const secondaryColor =
+    `#${secR.toString(16).padStart(2, '0')}${secG.toString(16).padStart(2, '0')}${secB.toString(16).padStart(2, '0')}`.toUpperCase();
 
   return {
     primaryColor: validPrimary,
     secondaryColor,
     backgroundColor,
-    textColor
+    textColor,
   };
 }
 
@@ -103,7 +104,7 @@ export function ensureAccessibleContrast(
  */
 export function extractPaletteFromSamples(
   samples: string[],
-  fallbackCategory = 'Serviços'
+  fallbackCategory = 'Serviços',
 ): BrandPalette {
   const validSamples = samples.map(normalizeHex).filter((h): h is string => h !== null);
 
@@ -119,6 +120,6 @@ export function extractPaletteFromSamples(
     secondaryColor: accessible.secondaryColor,
     backgroundColor: accessible.backgroundColor,
     textColor: accessible.textColor,
-    paletteSource: 'EXTRACTED'
+    paletteSource: 'EXTRACTED',
   };
 }

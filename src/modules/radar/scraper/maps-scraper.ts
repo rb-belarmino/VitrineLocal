@@ -14,12 +14,17 @@ export class MapsScraper {
   /**
    * Executa a busca e rolagem no Google Maps retornando a lista de RawMapsLead.
    */
-  public async scrape(params: SearchParams, onProgress?: ScraperProgressCallback): Promise<RawMapsLead[]> {
+  public async scrape(
+    params: SearchParams,
+    onProgress?: ScraperProgressCallback,
+  ): Promise<RawMapsLead[]> {
     const { niche, location, limit } = params;
     const query = encodeURIComponent(`${niche} em ${location}`);
     const searchUrl = `https://www.google.com/maps/search/${query}`;
 
-    Logger.info(`Iniciando scraper no Google Maps: query="${niche} em ${location}", limit=${limit}`);
+    Logger.info(
+      `Iniciando scraper no Google Maps: query="${niche} em ${location}", limit=${limit}`,
+    );
 
     const browser = await BrowserPool.getBrowser();
     const context = await BrowserPool.createStealthContext(browser);
@@ -81,11 +86,15 @@ export class MapsScraper {
         await page.waitForTimeout(delay);
       }
 
-      Logger.info(`Scraping finalizado. Total de estabelecimentos brutos minerados: ${leadsMap.size}`);
+      Logger.info(
+        `Scraping finalizado. Total de estabelecimentos brutos minerados: ${leadsMap.size}`,
+      );
       return Array.from(leadsMap.values()).slice(0, limit);
     } catch (error) {
       Logger.error(`Erro durante o scraping de "${niche} em ${location}"`, error);
-      throw new ScrapingError(`Falha ao minerar estabelecimentos no Google Maps: ${error instanceof Error ? error.message : String(error)}`);
+      throw new ScrapingError(
+        `Falha ao minerar estabelecimentos no Google Maps: ${error instanceof Error ? error.message : String(error)}`,
+      );
     } finally {
       await page.close();
       await context.close();

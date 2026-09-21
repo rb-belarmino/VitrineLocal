@@ -9,20 +9,20 @@ describe('ReviewCurator (Unit)', () => {
         authorName: 'Cliente Ruim',
         rating: 2,
         relativeTime: 'há 1 mês',
-        text: 'Não gostei do serviço prestado.'
+        text: 'Não gostei do serviço prestado.',
       },
       {
         authorName: 'Cliente Mediano',
         rating: 3,
         relativeTime: 'há 2 meses',
-        text: 'Serviço mediano, nada de especial.'
+        text: 'Serviço mediano, nada de especial.',
       },
       {
         authorName: 'Cliente Bom',
         rating: 5,
         relativeTime: 'há 3 dias',
-        text: 'Serviço espetacular e muito atencioso!'
-      }
+        text: 'Serviço espetacular e muito atencioso!',
+      },
     ];
 
     const curated = curateTopReviews(reviews);
@@ -38,20 +38,20 @@ describe('ReviewCurator (Unit)', () => {
         authorName: 'Sem Texto',
         rating: 5,
         relativeTime: 'ontem',
-        text: ''
+        text: '',
       },
       {
         authorName: 'Muito Curto',
         rating: 5,
         relativeTime: 'ontem',
-        text: 'Top!'
+        text: 'Top!',
       },
       {
         authorName: 'Texto Rico',
         rating: 5,
         relativeTime: 'ontem',
-        text: 'Profissionais altamente capacitados, preço justo e entrega no prazo.'
-      }
+        text: 'Profissionais altamente capacitados, preço justo e entrega no prazo.',
+      },
     ];
 
     const curated = curateTopReviews(reviews);
@@ -66,38 +66,38 @@ describe('ReviewCurator (Unit)', () => {
         authorName: 'Curto 1',
         rating: 5,
         relativeTime: 'há 1 semana',
-        text: 'Atendimento muito bom, recomendo a todos.'
+        text: 'Atendimento muito bom, recomendo a todos.',
       },
       {
         authorName: 'Longo Campeão',
         rating: 5,
         relativeTime: 'há 2 semanas',
-        text: 'Melhor oficina da região! Meu carro estava com vazamento complexo no radiador e ninguém encontrava a causa. A equipe diagnosticou em 1 hora e o conserto ficou perfeito com valor honesto.'
+        text: 'Melhor oficina da região! Meu carro estava com vazamento complexo no radiador e ninguém encontrava a causa. A equipe diagnosticou em 1 hora e o conserto ficou perfeito com valor honesto.',
       },
       {
         authorName: 'Médio',
         rating: 5,
         relativeTime: 'há 3 semanas',
-        text: 'Gostei bastante da rapidez e do cuidado com o veículo.'
+        text: 'Gostei bastante da rapidez e do cuidado com o veículo.',
       },
       {
         authorName: 'Extra 1',
         rating: 5,
         relativeTime: 'há 1 mês',
-        text: 'Sempre levo meu carro lá e nunca tive problemas.'
+        text: 'Sempre levo meu carro lá e nunca tive problemas.',
       },
       {
         authorName: 'Extra 2',
         rating: 5,
         relativeTime: 'há 2 meses',
-        text: 'Ambiente agradável e café excelente enquanto espera.'
+        text: 'Ambiente agradável e café excelente enquanto espera.',
       },
       {
         authorName: 'Extra 3',
         rating: 5,
         relativeTime: 'há 3 meses',
-        text: 'Mecânicos muito experientes e honestos.'
-      }
+        text: 'Mecânicos muito experientes e honestos.',
+      },
     ];
 
     const curated = curateTopReviews(reviews, 5);

@@ -45,7 +45,7 @@ export function parseVisualsFromHtml(html: string): ExtractedVisuals {
     return {
       logoUrl: null,
       heroImageUrl: null,
-      galleryUrls: []
+      galleryUrls: [],
     };
   }
 
@@ -56,7 +56,7 @@ export function parseVisualsFromHtml(html: string): ExtractedVisuals {
   return {
     logoUrl,
     heroImageUrl,
-    galleryUrls
+    galleryUrls,
   };
 }
 
@@ -68,23 +68,25 @@ export class MapsImageExtractor {
     try {
       Logger.info(`Extraindo imagens do perfil: ${mapsUrl}`);
       await page.goto(mapsUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
-      
+
       // Aguarda 1s para o feed carregar as imagens
       await page.waitForTimeout(1000);
 
       const html = await page.content();
       const visuals = parseVisualsFromHtml(html);
-      Logger.info(`Imagens extraídas: Hero=${visuals.heroImageUrl ? 'Sim' : 'Não'}, Galeria=${visuals.galleryUrls.length}`);
+      Logger.info(
+        `Imagens extraídas: Hero=${visuals.heroImageUrl ? 'Sim' : 'Não'}, Galeria=${visuals.galleryUrls.length}`,
+      );
       return visuals;
     } catch (err) {
       Logger.warn(
         `Falha ao extrair imagens do Google Maps para ${mapsUrl}`,
-        err instanceof Error ? { error: err.message } : { error: String(err) }
+        err instanceof Error ? { error: err.message } : { error: String(err) },
       );
       return {
         logoUrl: null,
         heroImageUrl: null,
-        galleryUrls: []
+        galleryUrls: [],
       };
     }
   }

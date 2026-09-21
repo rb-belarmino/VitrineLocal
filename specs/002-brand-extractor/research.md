@@ -3,13 +3,16 @@
 ## 1. Extração e Análise de Cores & Acessibilidade
 
 ### Contexto
+
 O Módulo 2 precisa receber imagens do comércio (fotos de capa, logotipo, fachada) e determinar uma paleta de 4 cores coerentes para alimentar os templates CSS do Módulo 3:
+
 - `--color-primary`: Cor dominante/marca da empresa.
 - `--color-secondary`: Cor de destaque/acento para botões e chamadas.
 - `--color-background`: Fundo da página (geralmente branco puro `#FFFFFF` ou escuro profundo `#0F172A`).
 - `--color-text`: Texto legível com alto contraste relativo (WCAG AA >= 4.5:1).
 
 ### Decisão Técnica
+
 1. **Algoritmo de Cores**:
    - Usar um módulo leve em TypeScript puro para quantização de cores (histograma e median cut simplificado) e cálculo de luminância relativa conforme W3C WCAG 2.1:
      $$\text{Luminância} = 0.2126 \times R + 0.7152 \times G + 0.0722 \times B$$
@@ -21,14 +24,16 @@ O Módulo 2 precisa receber imagens do comércio (fotos de capa, logotipo, facha
    - A cor primária da marca é preservada em headers, badges e destaques.
 
 ### Alternativas Consideradas
-- *Delegar 100% da extração de cores para a Gemini Vision API*: Avaliado, mas descartado como caminho primário devido a custo extra de tokens e latência desnecessária para operações matemáticas simples de pixels. Gemini será focado no processamento semântico de textos.
-- *Node-Canvas / C++ bindings*: Rejeitado por violar a premissa de builds limpos e portabilidade instantânea em Node 24 LTS sem ferramentas de compilação C++.
+
+- _Delegar 100% da extração de cores para a Gemini Vision API_: Avaliado, mas descartado como caminho primário devido a custo extra de tokens e latência desnecessária para operações matemáticas simples de pixels. Gemini será focado no processamento semântico de textos.
+- _Node-Canvas / C++ bindings_: Rejeitado por violar a premissa de builds limpos e portabilidade instantânea em Node 24 LTS sem ferramentas de compilação C++.
 
 ---
 
 ## 2. Paletas de Cores de Fallback por Nicho
 
 ### Decisão
+
 Criar um dicionário tipado e curado (`NICHE_COLOR_PALETTES`) para as principais categorias comerciais mapeadas pelo Radar:
 
 ```typescript
@@ -42,6 +47,7 @@ export interface BrandPalette {
 ```
 
 Exemplos pré-calibrados:
+
 - **Saúde / Odontologia / Clínicas**: Primária `#0284C7` (Sky Blue), Secundária `#0D9488` (Teal), Fundo `#FFFFFF`, Texto `#0F172A`.
 - **Oficinas Mecânicas / Automotivo**: Primária `#EA580C` (Amber/Orange), Secundária `#334155` (Slate), Fundo `#0F172A`, Texto `#F8FAFC`.
 - **Gastronomia / Restaurantes**: Primária `#DC2626` (Warm Red), Secundária `#D97706` (Amber), Fundo `#FFFBEB`, Texto `#1C1917`.
@@ -53,9 +59,11 @@ Exemplos pré-calibrados:
 ## 3. Curadoria de Depoimentos do Google Maps
 
 ### Contexto
+
 O Google Maps exibe abas de avaliações com notas de 1 a 5 estrelas, fotos de autores e comentários.
 
 ### Decisão
+
 - O scraper Playwright navega para o link do perfil do Maps e aciona a aba/seção de avaliações ("Comentários").
 - Filtra apenas avaliações com nota 5 estrelas (`aria-label` contendo "5 estrelas" ou pontuação 5.0).
 - Algoritmo de seleção:
@@ -69,6 +77,7 @@ O Google Maps exibe abas de avaliações com notas de 1 a 5 estrelas, fotos de a
 ## 4. Síntese Semântica com Google Gemini API (`@google/genai`)
 
 ### Decisão
+
 - Utilizar a biblioteca oficial `@google/genai` (ou chamada HTTP autenticada via SDK com a chave `GEMINI_API_KEY`).
 - Modelo recomendado: `gemini-2.5-flash` (ou `gemini-1.5-flash`), com temperatura `0.3` (para alta consistência e fidelidade comercial).
 - Formato de saída: **JSON Estruturado** via `responseSchema` ou prompt rigoroso com validação Zod:
@@ -84,6 +93,7 @@ O Google Maps exibe abas de avaliações com notas de 1 a 5 estrelas, fotos de a
 ## 5. Arquitetura Modular e Isolamento
 
 ### Decisão
+
 - Módulo isolado em `src/modules/brand/`:
   - `core/`: Algoritmos puros (extrator de paleta, cálculo de luminância, curador de reviews, dicionário de nichos).
   - `services/`: `BrandExtractorService` coordenando o fluxo (Playwright + Gemini + Prisma).

@@ -14,6 +14,7 @@ Executa a extração completa para o lead informado. É idempotente: caso o lead
   - `force` (opcional, booleano): Se `true`, ignora o cache do banco e re-extrai os dados da web e da IA.
 
 ### Resposta de Sucesso (`200 OK`)
+
 ```json
 {
   "success": true,
@@ -73,9 +74,11 @@ Recupera os dados enriquecidos já persistidos para um determinado lead.
 - **Rota**: `/api/brand/:leadId`
 
 ### Resposta de Sucesso (`200 OK`)
+
 Retorna o mesmo payload `{ success: true, data: { ... } }` descrito acima.
 
 ### Resposta de Erro (`404 Not Found`)
+
 ```json
 {
   "success": false,

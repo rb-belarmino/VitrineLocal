@@ -1,9 +1,5 @@
 import { PrismaClient, BrandProfile } from '@prisma/client';
-import {
-  BrandProfileResponse,
-  CreateBrandProfileInput,
-  TestimonialItem
-} from '../brand.types';
+import { BrandProfileResponse, CreateBrandProfileInput, TestimonialItem } from '../brand.types';
 
 type BrandProfileWithLead = BrandProfile & {
   lead?: {
@@ -17,7 +13,7 @@ export class BrandRepository {
 
   async findLeadById(leadId: string) {
     return this.prisma.qualifiedLead.findUnique({
-      where: { id: leadId }
+      where: { id: leadId },
     });
   }
 
@@ -28,10 +24,10 @@ export class BrandRepository {
         lead: {
           select: {
             businessName: true,
-            category: true
-          }
-        }
-      }
+            category: true,
+          },
+        },
+      },
     });
 
     if (!record) {
@@ -58,24 +54,24 @@ export class BrandRepository {
       callToAction: input.content.callToAction,
       testimonials: JSON.stringify(input.testimonials),
       status: input.status ?? 'COMPLETED',
-      errorMessage: input.errorMessage ?? null
+      errorMessage: input.errorMessage ?? null,
     };
 
     const record = await this.prisma.brandProfile.upsert({
       where: { leadId: input.leadId },
       create: {
         leadId: input.leadId,
-        ...data
+        ...data,
       },
       update: data,
       include: {
         lead: {
           select: {
             businessName: true,
-            category: true
-          }
-        }
-      }
+            category: true,
+          },
+        },
+      },
     });
 
     return this.mapToResponse(record);
@@ -117,19 +113,25 @@ export class BrandRepository {
         secondaryColor: record.secondaryColor,
         backgroundColor: record.backgroundColor,
         textColor: record.textColor,
-        paletteSource: record.paletteSource as 'EXTRACTED' | 'FALLBACK_NICHE'
+        paletteSource: record.paletteSource as 'EXTRACTED' | 'FALLBACK_NICHE',
       },
       content: {
         headline: record.headline,
         subheadline: record.subheadline,
         aboutText: record.aboutText,
         keyServices,
-        callToAction: record.callToAction
+        callToAction: record.callToAction,
       },
       testimonials,
       status: record.status as 'COMPLETED' | 'FAILED',
-      createdAt: record.createdAt instanceof Date ? record.createdAt.toISOString() : String(record.createdAt),
-      updatedAt: record.updatedAt instanceof Date ? record.updatedAt.toISOString() : String(record.updatedAt)
+      createdAt:
+        record.createdAt instanceof Date
+          ? record.createdAt.toISOString()
+          : String(record.createdAt),
+      updatedAt:
+        record.updatedAt instanceof Date
+          ? record.updatedAt.toISOString()
+          : String(record.updatedAt),
     };
   }
 }

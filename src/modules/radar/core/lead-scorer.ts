@@ -26,7 +26,7 @@ export class LeadScorer {
         score: 0,
         isQualified: false,
         status: 'DISQUALIFIED',
-        disqualificationReason: 'HAS_WEBSITE'
+        disqualificationReason: 'HAS_WEBSITE',
       };
     }
 
@@ -36,7 +36,7 @@ export class LeadScorer {
         score: 0,
         isQualified: false,
         status: 'DISQUALIFIED',
-        disqualificationReason: 'LOW_REVIEWS'
+        disqualificationReason: 'LOW_REVIEWS',
       };
     }
 
@@ -46,7 +46,7 @@ export class LeadScorer {
         score: 0,
         isQualified: false,
         status: 'DISQUALIFIED',
-        disqualificationReason: 'LOW_RATING'
+        disqualificationReason: 'LOW_RATING',
       };
     }
 
@@ -78,7 +78,7 @@ export class LeadScorer {
     return {
       score,
       isQualified: true,
-      status: 'QUALIFIED'
+      status: 'QUALIFIED',
     };
   }
 }

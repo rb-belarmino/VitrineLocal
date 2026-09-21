@@ -39,6 +39,7 @@ npm run test:coverage
 ## 3. Cenários de Teste Automatizados (TDD / Offline Fixtures)
 
 ### Cenário A: Classificador de Websites (Filtro Anti-Site)
+
 Testa a capacidade do motor de distinguir sites próprios de redes sociais e ausência de URL.
 
 ```bash
@@ -46,11 +47,13 @@ npx vitest run src/modules/radar/__tests__/website-classifier.test.ts
 ```
 
 **Validações:**
+
 - URLs nulas, vazias ou `about:blank` ➔ Classificadas como `NO_WEBSITE` (Aprovado).
 - URLs de Instagram, Facebook, Linktree, TikTok, WhatsApp (`wa.me`) ➔ Classificadas como `SOCIAL_ONLY` (Aprovado).
 - URLs de domínios corporativos (`oficinaauto.com.br`) ➔ Classificadas como `OWN_WEBSITE` (Descartado).
 
 ### Cenário B: Normalizador Telefônico & Detector WhatsApp
+
 Testa a normalização para E.164 e identificação de celular vs. fixo.
 
 ```bash
@@ -58,11 +61,13 @@ npx vitest run src/modules/radar/__tests__/phone-normalizer.test.ts
 ```
 
 **Validações:**
+
 - `(11) 99876-5432` ➔ `+5511998765432` com `isMobile: true`.
 - `(11) 3214-5678` ➔ `+551132145678` com `isMobile: false`.
 - Números com prefixo de operadora ou espaços irregulares normalizados corretamente.
 
 ### Cenário C: DOM Parser Offline (Com Fixtures HTML)
+
 Testa a extração dos seletores CSS do Google Maps contra arquivos HTML reais previamente salvos, sem necessidade de internet.
 
 ```bash
@@ -83,6 +88,7 @@ npm run radar:search -- --niche="Oficina Mecânica" --location="Moema, São Paul
 ```
 
 **Saída Estruturada Esperada no Terminal:**
+
 ```json
 {
   "jobId": "d3b07384-d113-4638-9279-d5a23f4a3e81",

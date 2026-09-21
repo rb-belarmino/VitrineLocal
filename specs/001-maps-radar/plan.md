@@ -8,7 +8,7 @@
 
 ## Summary
 
-Implementação do motor de mineração geográfica e qualificação de oportunidades locais **Maps Radar**. Utiliza automação headless resiliente com Playwright para navegar no Google Maps a partir de um nicho e localidade (ex: *"Oficinas em Moema, SP"*), extraindo cards de empresas e aplicando filtros determinísticos para reter apenas estabelecimentos com excelente reputação (nota >= 4.0, reviews >= 5) que **não possuem website próprio** (ou utilizam apenas redes sociais), normalizando dados de contato (E.164 e identificação WhatsApp) para alimentar o funil de Visual Pitch.
+Implementação do motor de mineração geográfica e qualificação de oportunidades locais **Maps Radar**. Utiliza automação headless resiliente com Playwright para navegar no Google Maps a partir de um nicho e localidade (ex: _"Oficinas em Moema, SP"_), extraindo cards de empresas e aplicando filtros determinísticos para reter apenas estabelecimentos com excelente reputação (nota >= 4.0, reviews >= 5) que **não possuem website próprio** (ou utilizam apenas redes sociais), normalizando dados de contato (E.164 e identificação WhatsApp) para alimentar o funil de Visual Pitch.
 
 ---
 
@@ -17,6 +17,7 @@ Implementação do motor de mineração geográfica e qualificação de oportuni
 **Language/Version**: TypeScript 7.0.2 / Node.js 24.21.0 (LTS) em modo estrito (`strict: true`, `noImplicitAny: true`, `exactOptionalPropertyTypes: true`).
 
 **Primary Dependencies**:
+
 - `playwright` (Chromium headless com anti-fingerprinting para automação web)
 - `zod` (Validação estrita de contratos e schemas em runtime)
 - `cheerio` / `@types/cheerio` (Para parsing de HTML estático offline em testes com fixtures)
@@ -33,6 +34,7 @@ Implementação do motor de mineração geográfica e qualificação de oportuni
 **Performance Goals**: Extração e qualificação de 20 estabelecimentos em < 15 segundos; execução dos testes unitários em < 2 segundos.
 
 **Constraints**:
+
 - Zero custo de API oficial do Google Places na prospecção inicial;
 - Tolerância a falhas: erros em cards individuais não quebram o lote;
 - Zero `any` ou typecast perigoso não justificado.
@@ -43,17 +45,17 @@ Implementação do motor de mineração geográfica e qualificação de oportuni
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Princípio Constitucional | Status | Justificativa / Validação |
-|---|---|---|
-| **I. Test-Driven Development (TDD)** | ✅ PASS | Suíte com Vitest planejada com fixtures estáticas para ciclo Red-Green-Refactor sem flakes de rede. |
-| **II. Production-Ready Quality Gates** | ✅ PASS | Pipeline planejado com 5 gates: `typecheck`, `lint`, `audit`, `security` e `test`. |
+| Princípio Constitucional                  | Status  | Justificativa / Validação                                                                                   |
+| ----------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
+| **I. Test-Driven Development (TDD)**      | ✅ PASS | Suíte com Vitest planejada com fixtures estáticas para ciclo Red-Green-Refactor sem flakes de rede.         |
+| **II. Production-Ready Quality Gates**    | ✅ PASS | Pipeline planejado com 5 gates: `typecheck`, `lint`, `audit`, `security` e `test`.                          |
 | **III. Modularidade & Arquitetura Limpa** | ✅ PASS | O Módulo 1 é completamente desacoplado e expõe apenas contratos tipados (`IRadarService`, `QualifiedLead`). |
-| **IV. Resiliência Operacional** | ✅ PASS | Delays pseudo-aleatórios, timeouts individuais e isolamento de falhas por estabelecimento. |
-| **V. Segurança e Privacidade por Design** | ✅ PASS | Nenhuma credencial necessária no Módulo 1; sanitização de dados extraídos do DOM. |
+| **IV. Resiliência Operacional**           | ✅ PASS | Delays pseudo-aleatórios, timeouts individuais e isolamento de falhas por estabelecimento.                  |
+| **V. Segurança e Privacidade por Design** | ✅ PASS | Nenhuma credencial necessária no Módulo 1; sanitização de dados extraídos do DOM.                           |
 
-*Resultado dos Gates: 100% APROVADO sem violações.*
+_Resultado dos Gates: 100% APROVADO sem violações._
 
 ---
 
@@ -114,4 +116,4 @@ src/
 
 ## Complexity Tracking
 
-*Nenhuma violação constitucional detectada. Todas as escolhas técnicas atendem diretamente aos princípios de simplicidade, tipagem estrita e testabilidade.*
+_Nenhuma violação constitucional detectada. Todas as escolhas técnicas atendem diretamente aos princípios de simplicidade, tipagem estrita e testabilidade._

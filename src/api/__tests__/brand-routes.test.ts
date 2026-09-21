@@ -27,32 +27,32 @@ describe('Brand REST API Endpoints (Integration)', () => {
       secondaryColor: '#334155',
       backgroundColor: '#0F172A',
       textColor: '#F8FAFC',
-      paletteSource: 'EXTRACTED'
+      paletteSource: 'EXTRACTED',
     },
     content: {
       headline: 'Oficina Precision em Moema',
       subheadline: 'Manutenção de confiança para seu veículo',
       aboutText: 'Mais de 15 anos oferecendo os melhores serviços automotivos da região.',
       keyServices: ['Mecânica', 'Suspensão'],
-      callToAction: 'Agende pelo WhatsApp'
+      callToAction: 'Agende pelo WhatsApp',
     },
     testimonials: [
       {
         authorName: 'Carlos',
         rating: 5,
         relativeTime: 'há 1 mês',
-        text: 'Excelente atendimento!'
-      }
+        text: 'Excelente atendimento!',
+      },
     ],
     status: 'COMPLETED',
     createdAt: '2026-09-21T12:00:00.000Z',
-    updatedAt: '2026-09-21T12:00:00.000Z'
+    updatedAt: '2026-09-21T12:00:00.000Z',
   };
 
   beforeEach(() => {
     mockBrandService = {
       getBrandProfile: vi.fn(),
-      extractBrand: vi.fn()
+      extractBrand: vi.fn(),
     };
 
     app = createApp(undefined, undefined, mockBrandService as unknown as BrandExtractorService);
@@ -69,7 +69,7 @@ describe('Brand REST API Endpoints (Integration)', () => {
 
     it('deve retornar 404 se o perfil de marca não existir', async () => {
       mockBrandService.getBrandProfile.mockRejectedValue(
-        new NotFoundError('Perfil não encontrado')
+        new NotFoundError('Perfil não encontrado'),
       );
 
       const res = await request(app).get(`/api/brand/${validUuid}`);

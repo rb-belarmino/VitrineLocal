@@ -129,13 +129,13 @@ stateDiagram-v2
     [*] --> MINERADO: Módulo 1 (Extração do Google Maps)
     MINERADO --> QUALIFICADO: Passou no filtro anti-site e nota >= 4.0
     MINERADO --> DESQUALIFICADO: Já possui site próprio ou nota baixa
-    
+
     QUALIFICADO --> IDENTIDADE_EXTRAIDA: Módulo 2 (Cores, fotos e depoimentos)
     IDENTIDADE_EXTRAIDA --> PREVIEW_PUBLICADO: Módulo 3 (Landing Page pronta)
-    
+
     PREVIEW_PUBLICADO --> ABORDAGEM_GERADA: Módulo 4 (Copy criada via Gemini)
     ABORDAGEM_GERADA --> CONTATADO: Mensagem enviada pelo operador
-    
+
     CONTATADO --> EM_NEGOCIACAO: Cliente respondeu / visualizou preview
     EM_NEGOCIACAO --> CONVERTIDO: Venda fechada (Site contratado)
     EM_NEGOCIACAO --> PERDIDO: Recusou proposta
@@ -150,7 +150,7 @@ Nenhum código entra em produção ou é integrado à branch principal sem passa
 ```mermaid
 flowchart TD
     Push[Commit / Push do Agente ou Dev] --> CI[Pipeline GitHub Actions]
-    
+
     subgraph Gates["5 Quality Gates Automatizados"]
         G1[1. Typecheck: tsc --noEmit<br/>TypeScript Strict, zero 'any']
         G2[2. Linter: ESLint<br/>Zero warnings permitidos]

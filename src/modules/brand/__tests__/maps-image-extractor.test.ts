@@ -42,10 +42,16 @@ describe('MapsImageExtractor (Unit)', () => {
 
       const visuals = parseVisualsFromHtml(mockHtml);
 
-      expect(visuals.heroImageUrl).toBe('https://lh5.googleusercontent.com/p/AF1QipHero=w1200-h800-k-no');
-      expect(visuals.logoUrl).toBe('https://lh5.googleusercontent.com/p/AF1QipHero=w1200-h800-k-no');
+      expect(visuals.heroImageUrl).toBe(
+        'https://lh5.googleusercontent.com/p/AF1QipHero=w1200-h800-k-no',
+      );
+      expect(visuals.logoUrl).toBe(
+        'https://lh5.googleusercontent.com/p/AF1QipHero=w1200-h800-k-no',
+      );
       expect(visuals.galleryUrls.length).toBeGreaterThan(0);
-      expect(visuals.galleryUrls).toContain('https://lh5.googleusercontent.com/p/AF1QipPhoto1=w1200-h800-k-no');
+      expect(visuals.galleryUrls).toContain(
+        'https://lh5.googleusercontent.com/p/AF1QipPhoto1=w1200-h800-k-no',
+      );
     });
 
     it('deve retornar campos nulos e galeria vazia caso não haja fotos do Google no HTML', () => {

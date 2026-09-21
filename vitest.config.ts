@@ -6,7 +6,7 @@ export default defineConfig({
     environment: 'node',
     env: {
       DATABASE_URL: process.env.DATABASE_URL || 'file:./dev.db',
-      NODE_ENV: 'test'
+      NODE_ENV: 'test',
     },
     include: ['src/**/__tests__/**/*.test.ts'],
     exclude: ['node_modules', 'dist', 'specs'],
@@ -20,14 +20,14 @@ export default defineConfig({
         'src/**/*.types.ts',
         'src/**/*.schemas.ts',
         'src/modules/radar/scraper/maps-selectors.ts',
-        'src/modules/radar/scraper/browser-pool.ts'
+        'src/modules/radar/scraper/browser-pool.ts',
       ],
       thresholds: {
         lines: 85,
         functions: 85,
         branches: 80,
-        statements: 85
-      }
-    }
-  }
+        statements: 85,
+      },
+    },
+  },
 });

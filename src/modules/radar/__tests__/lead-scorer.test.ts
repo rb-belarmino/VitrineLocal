@@ -6,7 +6,7 @@ describe('LeadScorer (Score Comercial & Qualificação)', () => {
     const result = LeadScorer.evaluate({
       websiteType: 'NO_WEBSITE',
       rating: 4.9,
-      reviewCount: 120
+      reviewCount: 120,
     });
 
     expect(result.score).toBe(100);
@@ -20,7 +20,7 @@ describe('LeadScorer (Score Comercial & Qualificação)', () => {
     const result = LeadScorer.evaluate({
       websiteType: 'SOCIAL_ONLY',
       rating: 4.2,
-      reviewCount: 25
+      reviewCount: 25,
     });
 
     expect(result.score).toBe(70);
@@ -32,7 +32,7 @@ describe('LeadScorer (Score Comercial & Qualificação)', () => {
     const result = LeadScorer.evaluate({
       websiteType: 'NO_WEBSITE',
       rating: 3.8,
-      reviewCount: 50
+      reviewCount: 50,
     });
 
     expect(result.isQualified).toBe(false);
@@ -44,7 +44,7 @@ describe('LeadScorer (Score Comercial & Qualificação)', () => {
     const result = LeadScorer.evaluate({
       websiteType: 'NO_WEBSITE',
       rating: 5.0,
-      reviewCount: 3
+      reviewCount: 3,
     });
 
     expect(result.isQualified).toBe(false);
@@ -56,7 +56,7 @@ describe('LeadScorer (Score Comercial & Qualificação)', () => {
     const result = LeadScorer.evaluate({
       websiteType: 'OWN_WEBSITE',
       rating: 5.0,
-      reviewCount: 200
+      reviewCount: 200,
     });
 
     expect(result.isQualified).toBe(false);
