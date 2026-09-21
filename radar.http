@@ -30,7 +30,7 @@ Content-Type: {{contentType}}
 ### 3. Consultar Status do Job (Dinâmico via REST Client)
 # Lê automaticamente o jobId retornado na requisição anterior (#2 startSearch)
 # Status evolui: PENDING -> RUNNING -> COMPLETED (ou FAILED)
-@activeJobId = {{startSearch.response.body.jobId}}
+@activeJobId = {{startSearch.response.body.data.jobId}}
 GET {{baseUrl}}/api/radar/jobs/{{activeJobId}}
 Content-Type: {{contentType}}
 
