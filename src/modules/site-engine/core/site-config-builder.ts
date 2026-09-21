@@ -80,8 +80,7 @@ export class SiteConfigBuilder {
         secondaryColor: profile.secondaryColor,
         backgroundColor: profile.backgroundColor,
         textColor: profile.textColor,
-        paletteSource:
-          profile.paletteSource === 'FALLBACK_NICHE' ? 'FALLBACK_NICHE' : 'EXTRACTED',
+        paletteSource: profile.paletteSource === 'FALLBACK_NICHE' ? 'FALLBACK_NICHE' : 'EXTRACTED',
       },
       content: {
         headline: profile.headline,

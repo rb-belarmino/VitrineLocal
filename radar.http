@@ -142,4 +142,40 @@ GET {{baseUrl}}/preview/oficina-precision-moema
 GET {{baseUrl}}/api/preview/20d8d117-c19b-4678-be82-2985e5444c35/config
 Content-Type: {{contentType}}
 
+###
+
+### ==============================================================================
+### MÓDULO 4: OUTREACH CRM & PORTAL WEB
+### ==============================================================================
+
+### 17. Acessar o Portal Web do Operador (Dashboard SPA)
+# Abre a interface visual de comando da VitrineLocal
+GET {{baseUrl}}/
+
+###
+
+### 18. Gerar Abordagem Comercial com IA (Visual Pitch)
+# Produz texto consultivo personalizado e link do WhatsApp
+POST {{baseUrl}}/api/outreach/generate/22222222-2222-2222-2222-222222222222
+Content-Type: {{contentType}}
+
+###
+
+### 19. Atualizar Status do Lead no Funil Comercial
+# Transições: QUALIFIED -> CONTACTED -> NEGOTIATING -> CONVERTED -> DISQUALIFIED
+PATCH {{baseUrl}}/api/outreach/leads/22222222-2222-2222-2222-222222222222/status
+Content-Type: {{contentType}}
+
+{
+  "status": "CONTACTED",
+  "outreachCopy": "Olá! Parabéns pelas 4.8 estrelas no Google... Preparamos um preview exclusivo: https://vitrinelocal.com.br/preview/exemplo"
+}
+
+###
+
+### 20. Obter Estatísticas Consolidadas do Funil (Portal Stats)
+GET {{baseUrl}}/api/portal/stats
+Content-Type: {{contentType}}
+
+
 

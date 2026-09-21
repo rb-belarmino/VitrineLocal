@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full bg-slate-900 text-slate-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VitrineLocal — Portal de Operações</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                50: '#f0fdfa',
+                500: '#14b8a6',
+                600: '#0d9488',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #475569;
+      }
+    </style>
+  </head>
+  <body class="min-h-full flex flex-col antialiased selection:bg-teal-500 selection:text-white">
+    <!-- Top Navigation -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-500 to-cyan-400 flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg shadow-teal-500/20"
+          >
+            V
+          </div>
+          <div>
+            <span class="text-lg font-bold text-white tracking-tight"
+              >Vitrine<span class="text-teal-400">Local</span></span
+            >
+            <span
+              class="ml-2 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-md bg-teal-500/10 text-teal-400 border border-teal-500/20"
+              >Portal de Operações</span
+            >
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            id="btnRefresh"
+            onclick="loadLeads()"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 text-sm font-medium hover:bg-slate-700 hover:text-white transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+              <path d="M8 16H3v5" />
+            </svg>
+            Atualizar
+          </button>
+          <span
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Sistema Online
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <!-- KPI Metric Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-slate-400">Total no Banco</p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpiTotalLeads" class="text-3xl font-extrabold text-white">0</span>
+            <span class="text-xs text-slate-500">estabelecimentos</span>
+          </div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-teal-400">Qualificados</p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpiQualified" class="text-3xl font-extrabold text-teal-400">0</span>
+            <span class="text-xs text-teal-500/80">alvos sem site</span>
+          </div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-purple-400">
+            Previews Prontos
+          </p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpiPreviewsReady" class="text-3xl font-extrabold text-purple-400">0</span>
+            <span class="text-xs text-purple-500/80">sites gerados</span>
+          </div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-cyan-400">
+            Abordados / Contatados
+          </p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpiContacted" class="text-3xl font-extrabold text-cyan-400">0</span>
+            <span class="text-xs text-cyan-500/80">no funil</span>
+          </div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-emerald-400">
+            Convertidos (Venda)
+          </p>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span id="kpiConverted" class="text-3xl font-extrabold text-emerald-400">0</span>
+            <span class="text-xs text-emerald-500/80">sites fechados 🎉</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 1: Formulário do Radar (Busca no Maps) -->
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-teal-400"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="m4.93 4.93 4.24 4.24" />
+                <path d="m14.83 9.17 4.24-4.24" />
+                <path d="m14.83 14.83 4.24 4.24" />
+                <path d="m9.17 14.83-4.24 4.24" />
+              </svg>
+              Radar de Prospecção (Google Maps Scraper)
+            </h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Minerar e qualificar automaticamente estabelecimentos sem site oficial.
+            </p>
+          </div>
+        </div>
+
+        <form
+          id="radarForm"
+          onsubmit="handleRadarSearch(event)"
+          class="grid grid-cols-1 md:grid-cols-4 gap-4"
+        >
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5">Nicho / Categoria</label>
+            <input
+              type="text"
+              id="searchNiche"
+              required
+              placeholder="Ex: Oficina Mecânica, Dentista, Pizzaria"
+              class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-teal-500 transition"
+            />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-medium text-slate-300 mb-1.5">Bairro / Cidade</label>
+            <input
+              type="text"
+              id="searchLocation"
+              required
+              placeholder="Ex: Moema, São Paulo ou Pinheiros, SP"
+              class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-teal-500 transition"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5">Limite de Leads</label>
+            <div class="flex gap-2">
+              <select
+                id="searchLimit"
+                class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500 transition flex-1"
+              >
+                <option value="5" selected>5 leads</option>
+                <option value="10">10 leads</option>
+                <option value="20">20 leads</option>
+              </select>
+              <button
+                type="submit"
+                id="btnSubmitSearch"
+                class="bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition flex items-center gap-1.5 shadow-lg shadow-teal-500/20 whitespace-nowrap"
+              >
+                <span>Buscar</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Card de Status do Job (Inativo por padrão) -->
+        <div
+          id="jobStatusContainer"
+          class="hidden mt-5 p-4 rounded-xl border border-slate-800 bg-slate-900/60 transition"
+        >
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div
+                id="jobSpinner"
+                class="w-5 h-5 border-2 border-teal-400 border-t-transparent rounded-full animate-spin"
+              ></div>
+              <div>
+                <p id="jobTitle" class="text-sm font-semibold text-white">
+                  Iniciando busca no Google Maps...
+                </p>
+                <p id="jobDetails" class="text-xs text-slate-400 mt-0.5">
+                  Job ID: <span id="jobIdText"></span>
+                </p>
+              </div>
+            </div>
+            <span
+              id="jobBadge"
+              class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20"
+            >
+              Processando
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 2: Central de Leads & Previews -->
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-teal-400"
+              >
+                <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+              Leads & Demonstrações de Sites (Visual Pitch)
+            </h2>
+            <p class="text-sm text-slate-400 mt-0.5">
+              Gerencie os estabelecimentos qualificados e visualize as landing pages geradas.
+            </p>
+          </div>
+
+          <!-- Filtros e Busca -->
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative min-w-[220px]">
+              <input
+                type="text"
+                id="filterText"
+                oninput="applyFilters()"
+                placeholder="Filtrar por nome ou bairro..."
+                class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500 transition"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="absolute left-3 top-2.5 text-slate-500"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+            </div>
+
+            <select
+              id="filterStatus"
+              onchange="applyFilters()"
+              class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-teal-500 transition"
+            >
+              <option value="ALL">Todos os Status</option>
+              <option value="QUALIFIED" selected>Apenas Qualificados</option>
+              <option value="CONTACTED">Contatados</option>
+              <option value="NEGOTIATING">Em Negociação</option>
+              <option value="CONVERTED">Convertidos 🎉</option>
+              <option value="DISQUALIFIED">Desqualificados</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabela de Leads -->
+        <div class="overflow-x-auto rounded-xl border border-slate-800/80">
+          <table class="min-w-full divide-y divide-slate-800 text-left text-xs">
+            <thead class="bg-slate-900/80 text-slate-400 uppercase tracking-wider font-semibold">
+              <tr>
+                <th scope="col" class="px-4 py-3">Empresa & Localização</th>
+                <th scope="col" class="px-4 py-3">Nicho</th>
+                <th scope="col" class="px-4 py-3">Google Maps</th>
+                <th scope="col" class="px-4 py-3">Score</th>
+                <th scope="col" class="px-4 py-3">Status Comercial</th>
+                <th scope="col" class="px-4 py-3 text-right">Ações Rápidas</th>
+              </tr>
+            </thead>
+            <tbody
+              id="leadsTableBody"
+              class="divide-y divide-slate-800/60 bg-slate-950 font-normal"
+            >
+              <tr>
+                <td colspan="6" class="px-4 py-8 text-center text-slate-500">
+                  Carregando leads do banco...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal de Abordagem Comercial (Outreach Visual Pitch) -->
+    <div
+      id="outreachModal"
+      class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4"
+      >
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              💬 Proposta de Abordagem (Visual Pitch)
+            </h3>
+            <p id="modalSubtitle" class="text-xs text-slate-400 mt-0.5">
+              Gerando texto consultivo personalizado com IA...
+            </p>
+          </div>
+          <button
+            onclick="closeOutreachModal()"
+            class="text-slate-400 hover:text-white transition text-lg"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-semibold text-slate-300"
+              >Mensagem Formatada para WhatsApp</label
+            >
+            <span class="text-[10px] text-slate-400"
+              >Edição livre — URL atualiza em tempo real</span
+            >
+          </div>
+          <div
+            id="modalLandlineNotice"
+            class="hidden mb-2 text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 font-medium"
+          >
+            <span>⚠️</span>
+            <span
+              >Possível telefone fixo: verifique se possui WhatsApp Business cadastrado ou use
+              "Copiar Texto" para ligar.</span
+            >
+          </div>
+          <textarea
+            id="modalMessageText"
+            rows="7"
+            oninput="handleMessageInput(this.value)"
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-teal-500 leading-relaxed font-sans"
+          ></textarea>
+        </div>
+
+        <div class="flex items-center justify-between gap-4 pt-2">
+          <div class="flex items-center gap-2">
+            <label class="text-xs text-slate-400">Avançar Status:</label>
+            <select
+              id="modalStatusSelect"
+              class="bg-slate-950 border border-slate-700 text-xs rounded-lg px-2 py-1 text-slate-300"
+            >
+              <option value="QUALIFIED">Qualificado (Inicial)</option>
+              <option value="CONTACTED" selected>Contatado</option>
+              <option value="NEGOTIATING">Em Negociação</option>
+              <option value="CONVERTED">Convertido 🎉</option>
+              <option value="DISQUALIFIED">Desqualificado</option>
+            </select>
+          </div>
+
+          <div class="flex gap-2">
+            <button
+              onclick="copyModalText()"
+              id="btnCopyText"
+              class="px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-semibold hover:bg-slate-700 transition"
+            >
+              Copiar Texto
+            </button>
+            <a
+              id="btnSendWhatsapp"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="handleWhatsAppSent()"
+              class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-1.5 rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/20"
+            >
+              <span>Abrir WhatsApp Web</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Client-side script -->
+    <script>
+      let allLeads = [];
+      let currentModalLeadId = null;
+
+      async function loadLeads() {
+        try {
+          const res = await fetch('/api/radar/leads?limit=100');
+          const json = await res.json();
+          if (json.success) {
+            allLeads = json.data;
+            updateKPIs();
+            applyFilters();
+          }
+        } catch (err) {
+          console.error('Erro ao carregar leads:', err);
+        }
+      }
+
+      function updateKPIs() {
+        document.getElementById('kpiTotalLeads').textContent = allLeads.length;
+        document.getElementById('kpiQualified').textContent = allLeads.filter(
+          (l) => l.status === 'QUALIFIED',
+        ).length;
+        const previewsReadyEl = document.getElementById('kpiPreviewsReady');
+        if (previewsReadyEl) {
+          previewsReadyEl.textContent = allLeads.filter(
+            (l) => l.brandProfile !== null && l.brandProfile !== undefined,
+          ).length;
+        }
+        document.getElementById('kpiContacted').textContent = allLeads.filter(
+          (l) => l.status === 'CONTACTED' || l.status === 'NEGOTIATING',
+        ).length;
+        document.getElementById('kpiConverted').textContent = allLeads.filter(
+          (l) => l.status === 'CONVERTED',
+        ).length;
+      }
+
+      function applyFilters() {
+        const text = document.getElementById('filterText').value.toLowerCase();
+        const status = document.getElementById('filterStatus').value;
+
+        const filtered = allLeads.filter((lead) => {
+          const matchesStatus = status === 'ALL' || lead.status === status;
+          const matchesText =
+            !text ||
+            lead.businessName.toLowerCase().includes(text) ||
+            (lead.address && lead.address.toLowerCase().includes(text)) ||
+            lead.category.toLowerCase().includes(text);
+
+          return matchesStatus && matchesText;
+        });
+
+        renderTable(filtered);
+      }
+
+      function renderTable(leads) {
+        const tbody = document.getElementById('leadsTableBody');
+        if (leads.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">Nenhum lead corresponde aos filtros selecionados.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = leads
+          .map((lead) => {
+            const previewIdentifier = lead.slug || lead.id;
+            const previewUrl = `/preview/${previewIdentifier}`;
+
+            const statusBadges = {
+              QUALIFIED:
+                '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-teal-500/10 text-teal-400 border border-teal-500/20">Qualificado</span>',
+              CONTACTED:
+                '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Contatado</span>',
+              NEGOTIATING:
+                '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">Em Negociação</span>',
+              CONVERTED:
+                '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Convertido 🎉</span>',
+              DISQUALIFIED:
+                '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Desqualificado</span>',
+            };
+
+            const statusBadge =
+              statusBadges[lead.status] || `<span class="text-slate-400">${lead.status}</span>`;
+
+            return `
+          <tr class="hover:bg-slate-900/40 transition">
+            <td class="px-4 py-3">
+              <div class="font-semibold text-white text-sm">${escapeHtml(lead.businessName)}</div>
+              <div class="text-slate-400 text-xs truncate max-w-xs">${lead.address ? escapeHtml(lead.address) : 'Endereço não informado'}</div>
+              <div class="text-slate-500 text-xs mt-0.5">${lead.phoneRaw ? escapeHtml(lead.phoneRaw) : 'Sem telefone'}</div>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium text-xs">${escapeHtml(lead.category)}</span>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              <span class="text-amber-400 font-bold">★ ${lead.rating ? lead.rating.toFixed(1) : 'N/A'}</span>
+              <span class="text-slate-500 text-xs">(${lead.reviewCount || 0})</span>
+            </td>
+            <td class="px-4 py-3">
+              <span class="font-bold text-teal-400 text-xs">${lead.qualificationScore || 0} pts</span>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              ${statusBadge}
+            </td>
+            <td class="px-4 py-3 text-right whitespace-nowrap space-x-2">
+              <a href="${previewUrl}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-500/10 text-teal-400 hover:bg-teal-500 hover:text-slate-950 font-semibold text-xs border border-teal-500/20 transition">
+                👁️ Ver Site
+              </a>
+              <button onclick="openOutreachModal('${lead.id}', '${escapeJs(lead.businessName)}')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition">
+                💬 Pitch
+              </button>
+            </td>
+          </tr>
+        `;
+          })
+          .join('');
+      }
+
+      async function handleRadarSearch(e) {
+        e.preventDefault();
+        const niche = document.getElementById('searchNiche').value;
+        const location = document.getElementById('searchLocation').value;
+        const limit = parseInt(document.getElementById('searchLimit').value, 10);
+
+        const btn = document.getElementById('btnSubmitSearch');
+        btn.disabled = true;
+        btn.innerHTML = `Minerando...`;
+
+        const container = document.getElementById('jobStatusContainer');
+        container.classList.remove('hidden');
+        document.getElementById('jobTitle').textContent =
+          `Minerando "${niche}" em "${location}"...`;
+        document.getElementById('jobBadge').textContent = 'Iniciando';
+
+        try {
+          const res = await fetch('/api/radar/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ niche, location, limit }),
+          });
+          const data = await res.json();
+          if (data.success && data.data?.jobId) {
+            const jobId = data.data.jobId;
+            document.getElementById('jobIdText').textContent = jobId;
+            pollJob(jobId);
+          } else {
+            alert('Erro ao iniciar busca: ' + (data.message || 'Erro desconhecido'));
+            btn.disabled = false;
+            btn.innerHTML = `Buscar &rarr;`;
+          }
+        } catch (err) {
+          alert('Falha na requisição de busca.');
+          btn.disabled = false;
+          btn.innerHTML = `Buscar &rarr;`;
+        }
+      }
+
+      async function pollJob(jobId) {
+        const interval = setInterval(async () => {
+          try {
+            const res = await fetch(`/api/radar/jobs/${jobId}`);
+            const data = await res.json();
+            if (data.success) {
+              const status = data.data.status;
+              document.getElementById('jobBadge').textContent = status;
+
+              if (status === 'COMPLETED') {
+                clearInterval(interval);
+                document.getElementById('jobSpinner').classList.add('hidden');
+                document.getElementById('jobTitle').textContent = `Mineração concluída!`;
+                document.getElementById('jobBadge').className =
+                  'px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+                document.getElementById('btnSubmitSearch').disabled = false;
+                document.getElementById('btnSubmitSearch').innerHTML = `Buscar &rarr;`;
+                await loadLeads();
+              } else if (status === 'FAILED') {
+                clearInterval(interval);
+                document.getElementById('jobSpinner').classList.add('hidden');
+                document.getElementById('jobTitle').textContent = `Falha na mineração.`;
+                document.getElementById('jobBadge').className =
+                  'px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20';
+                document.getElementById('btnSubmitSearch').disabled = false;
+                document.getElementById('btnSubmitSearch').innerHTML = `Buscar &rarr;`;
+              }
+            }
+          } catch (err) {
+            console.error('Erro no polling do job:', err);
+          }
+        }, 1500);
+      }
+
+      let currentModalPhone = null;
+
+      async function openOutreachModal(leadId, businessName) {
+        currentModalLeadId = leadId;
+        const lead = allLeads.find((l) => l.id === leadId);
+        currentModalPhone = lead ? lead.phoneNormalized : null;
+
+        document.getElementById('outreachModal').classList.remove('hidden');
+        document.getElementById('modalSubtitle').textContent =
+          `Gerando abordagem para ${businessName}...`;
+        document.getElementById('modalMessageText').value =
+          'Aguarde... Sintetizando abordagem consultiva via IA...';
+        document.getElementById('modalStatusSelect').value = 'CONTACTED';
+
+        const landlineNotice = document.getElementById('modalLandlineNotice');
+        if (lead && lead.isMobile === false) {
+          landlineNotice.classList.remove('hidden');
+        } else {
+          landlineNotice.classList.add('hidden');
+        }
+
+        try {
+          const res = await fetch(`/api/outreach/generate/${leadId}`, { method: 'POST' });
+          const json = await res.json();
+          if (json.success) {
+            document.getElementById('modalSubtitle').textContent =
+              `Pronta para envio (${json.data.generatedVia})`;
+            document.getElementById('modalMessageText').value = json.data.messageText;
+            document.getElementById('btnSendWhatsapp').href = json.data.whatsappDispatchLink;
+          } else {
+            document.getElementById('modalMessageText').value =
+              'Erro ao gerar mensagem: ' + json.message;
+          }
+        } catch (err) {
+          document.getElementById('modalMessageText').value =
+            'Falha ao conectar com o gerador de abordagem.';
+        }
+      }
+
+      function handleMessageInput(val) {
+        if (!currentModalPhone) return;
+        const encoded = encodeURIComponent(val);
+        document.getElementById('btnSendWhatsapp').href =
+          `https://wa.me/${currentModalPhone}?text=${encoded}`;
+      }
+
+      function closeOutreachModal() {
+        document.getElementById('outreachModal').classList.add('hidden');
+        currentModalLeadId = null;
+        currentModalPhone = null;
+      }
+
+      function copyModalText() {
+        const text = document.getElementById('modalMessageText').value;
+        navigator.clipboard.writeText(text);
+        const btn = document.getElementById('btnCopyText');
+        btn.textContent = 'Copiado!';
+        setTimeout(() => {
+          btn.textContent = 'Copiar Texto';
+        }, 2000);
+      }
+
+      async function handleWhatsAppSent() {
+        if (!currentModalLeadId) return;
+        const nextStatus = document.getElementById('modalStatusSelect').value;
+        const currentCopy = document.getElementById('modalMessageText').value;
+
+        const confirmed = window.confirm(
+          `Deseja confirmar o disparo e atualizar o status comercial para "${nextStatus}"?`,
+        );
+        if (!confirmed) return;
+
+        try {
+          await fetch(`/api/outreach/leads/${currentModalLeadId}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: nextStatus, outreachCopy: currentCopy }),
+          });
+          await loadLeads();
+          closeOutreachModal();
+        } catch (err) {
+          console.error('Erro ao atualizar status:', err);
+        }
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function escapeJs(str) {
+        if (!str) return '';
+        return String(str).replace(/'/g, "\\'");
+      }
+
+      // Inicialização ao carregar a página
+      document.addEventListener('DOMContentLoaded', () => {
+        loadLeads();
+      });
+    </script>
+  </body>
+</html>

@@ -18,6 +18,7 @@ export default defineConfig({
         'src/modules/radar/**/*.ts',
         'src/modules/brand/**/*.ts',
         'src/modules/site-engine/**/*.ts',
+        'src/modules/outreach/**/*.ts',
         'src/api/**/*.ts',
       ],
       exclude: [

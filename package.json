@@ -18,7 +18,8 @@
     "test:coverage": "vitest run --coverage",
     "audit": "npm audit --audit-level=high",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "seed:demo": "tsx scripts/seed-demo.ts"
   },
   "dependencies": {
     "@google/genai": "^2.23.0",

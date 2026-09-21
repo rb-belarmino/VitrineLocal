@@ -33,6 +33,8 @@ describe('SiteEngineService (Unit)', () => {
     qualificationScore: 85,
     status: 'QUALIFIED',
     disqualificationReason: null,
+    outreachCopy: null,
+    contactedAt: null,
     mapsUrl: 'https://maps.google.com/?cid=123',
     searchJobId: null,
     createdAt: new Date(),
@@ -180,9 +182,7 @@ describe('SiteEngineService (Unit)', () => {
     });
 
     // Primeira verificação do slug base retorna falso (ocupado), segunda (-2) retorna true (livre)
-    vi.spyOn(mockRepo, 'isSlugAvailable')
-      .mockResolvedValueOnce(false)
-      .mockResolvedValueOnce(true);
+    vi.spyOn(mockRepo, 'isSlugAvailable').mockResolvedValueOnce(false).mockResolvedValueOnce(true);
 
     const config = await service.buildSiteConfig(mockLead.id);
 

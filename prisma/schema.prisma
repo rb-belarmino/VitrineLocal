@@ -41,8 +41,10 @@ model QualifiedLead {
   rating                 Float      @default(0.0)
   reviewCount            Int        @default(0)
   qualificationScore     Int        @default(0)
-  status                 String     // QUALIFIED, DISQUALIFIED
+  status                 String     // QUALIFIED, CONTACTED, NEGOTIATING, CONVERTED, DISQUALIFIED
   disqualificationReason String?
+  outreachCopy           String?
+  contactedAt            DateTime?
   mapsUrl                String     @unique
   searchJobId            String?
   searchJob              SearchJob?    @relation(fields: [searchJobId], references: [id], onDelete: SetNull)
@@ -54,6 +56,7 @@ model QualifiedLead {
   @@index([status])
   @@index([phoneNormalized])
   @@index([category])
+  @@index([contactedAt])
 }
 
 model BrandProfile {
