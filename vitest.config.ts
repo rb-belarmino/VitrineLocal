@@ -4,6 +4,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    env: {
+      DATABASE_URL: process.env.DATABASE_URL || 'file:./dev.db',
+      NODE_ENV: 'test'
+    },
     include: ['src/**/__tests__/**/*.test.ts'],
     exclude: ['node_modules', 'dist', 'specs'],
     coverage: {
