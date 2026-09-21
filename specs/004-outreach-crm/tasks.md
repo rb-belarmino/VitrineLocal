@@ -38,21 +38,16 @@
 
 ## Phase 3: User Story 1 - Portal Web Dashboard & Gestão de Leads (Priority: P1) 🎯 MVP
 
-**Goal**: Permitir que o operador acesse `http://localhost:3001/` ou `/dashboard`, visualize métricas em tempo real, navegue na lista de leads qualificados e abra os previews em nova aba com 1 clique.
+**Goal**: Permitir que o operador acesse `http://localhost:3000/`, visualize métricas em tempo real, navegue na lista de leads qualificados e abra os previews em nova aba com 1 clique no Next.js 16.3.5.
 
-**Independent Test**: Acessar `GET /` no navegador, verificar renderização do dashboard com KPIs do SQLite, filtros por nicho/status e clique em "Ver Site" abrindo `/preview/:slug`.
-
-### Tests for User Story 1
-
-- [x] T010 [P] [US1] Escrever testes de integração para as rotas `GET /`, `GET /dashboard` e `GET /api/portal/stats` em `src/api/__tests__/portal-routes.test.ts`
+**Independent Test**: Acessar `GET /` no navegador, verificar renderização do dashboard Next.js com KPIs do SQLite, filtros por nicho/status e clique em "Ver Site" abrindo `/preview/:slug`.
 
 ### Implementation for User Story 1
 
-- [x] T011 [US1] Implementar serviço do portal com cálculo consolidado de KPIs e entrega do HTML em `src/portal/portal-service.ts`
-- [x] T012 [US1] Implementar rotas `portal.routes.ts` em `src/api/routes/portal.routes.ts` e registrar no `src/api/server.ts`
-- [x] T013 [P] [US1] Implementar interface responsiva Tailwind CSS com tabela de leads, filtros rápidos, contadores de KPI e botão de preview em `src/portal/index.html`
+- [x] T010 [US1] Implementar Route Handlers Next.js `GET /api/portal/stats` e `GET /api/portal/leads` em `src/app/api/portal/`
+- [x] T011 [P] [US1] Implementar interface responsiva React com Tailwind CSS com tabela de leads, filtros rápidos, contadores de KPI e botão de preview em `src/app/page.tsx`
 
-**Checkpoint**: Dashboard MVP operacional servido diretamente pelo Express com visualização de leads e previews.
+**Checkpoint**: Dashboard MVP operacional integrado ao Next.js 16.3.5 com visualização de leads e previews.
 
 ---
 
@@ -64,8 +59,8 @@
 
 ### Implementation for User Story 2
 
-- [x] T014 [P] [US2] Implementar formulário interativo de busca com validação de campos (nicho, localização, limite) na aba Radar em `src/portal/index.html`
-- [x] T015 [US2] Implementar conexão com `POST /api/radar/search` e polling assíncrono em `GET /api/radar/jobs/:jobId` com animação de progresso e reload em `src/portal/index.html`
+- [x] T012 [P] [US2] Implementar formulário interativo de busca com validação de campos (nicho, localização, limite) na aba Radar em `src/app/page.tsx`
+- [x] T013 [US2] Implementar conexão com `POST /api/radar/search` e polling assíncrono em `GET /api/radar/jobs/:jobId` com animação de progresso e reload em `src/app/page.tsx`
 
 **Checkpoint**: Prospecção autônoma pelo portal sem necessidade de requisições manuais via terminal.
 
@@ -77,16 +72,12 @@
 
 **Independent Test**: Clicar em "Gerar Pitch" para um lead, editar uma frase no `<textarea>`, verificar a atualização dinâmica do link do WhatsApp, clicar em "Abrir WhatsApp Web", confirmar o envio no diálogo guiado e validar o lead atualizado para `CONTACTED` no SQLite.
 
-### Tests for User Story 3
-
-- [x] T016 [P] [US3] Escrever testes de integração para rotas `POST /api/outreach/generate/:leadId` e `PATCH /api/outreach/leads/:id/status` em `src/api/__tests__/outreach-routes.test.ts`
-
 ### Implementation for User Story 3
 
-- [x] T017 [US3] Implementar rotas de outreach em `src/api/routes/outreach.routes.ts` com validação de status e persistência de `outreachCopy` e `contactedAt`
-- [x] T018 [US3] Implementar modal de abordagem comercial com `<textarea>` editável e recálculo dinâmico da URL `wa.me` em tempo real em `src/portal/index.html`
-- [x] T019 [US3] Implementar badge visual de telefone fixo (`isMobile === false`) e botão de 1 clique "Copiar Mensagem" no modal em `src/portal/index.html`
-- [x] T020 [US3] Implementar diálogo de confirmação guiada de disparo WhatsApp que atualiza o status do lead para `CONTACTED` em `src/portal/index.html`
+- [x] T014 [US3] Implementar Route Handlers `POST /api/outreach/generate/[leadId]` e `PATCH /api/outreach/leads/[id]/status` em `src/app/api/outreach/` com validação de status e persistência de `outreachCopy` e `contactedAt`
+- [x] T015 [US3] Implementar modal de abordagem comercial com `<textarea>` editável e recálculo dinâmico da URL `wa.me` em tempo real em `src/app/page.tsx`
+- [x] T016 [US3] Implementar badge visual de telefone fixo (`isMobile === false`) e botão de 1 clique "Copiar Mensagem" no modal em `src/app/page.tsx`
+- [x] T017 [US3] Implementar diálogo de confirmação guiada de disparo WhatsApp que atualiza o status do lead para `CONTACTED` em `src/app/page.tsx`
 
 **Checkpoint**: Funil comercial completo de ponta a ponta com prospecção ativa e fechamento no WhatsApp.
 

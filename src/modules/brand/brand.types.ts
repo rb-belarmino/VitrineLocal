@@ -5,7 +5,7 @@ import {
   BrandProfileResponse,
 } from './schemas/brand.schemas';
 
-export { TestimonialItem, BrandPalette, SemanticContent, BrandProfileResponse };
+export type { TestimonialItem, BrandPalette, SemanticContent, BrandProfileResponse };
 
 export interface RawReview {
   authorName: string;

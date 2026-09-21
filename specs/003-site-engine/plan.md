@@ -24,14 +24,15 @@ O módulo conta com:
 ## Technical Context
 
 **Language/Version**: Node.js 24 LTS, TypeScript 5.7+ (`strict: true`, zero `any`)  
-**Primary Dependencies**: Express 4.x, Zod 3.24+, Cheerio 1.0+ (para testes de DOM), @prisma/client 6.x  
+**Primary Framework**: Next.js 16.3.5 (App Router, Turbopack, React 19, Server Components)  
+**Primary Dependencies**: `next@16.3.5`, `react@^19.0.0`, `react-dom@^19.0.0`, `tailwindcss`, `zod@^3.24.2`, `@prisma/client@^6.4.1`  
 **Storage**: SQLite local (`prisma/dev.db`) com modelo `QualifiedLead` evoluído com `slug: String? @unique`  
-**Testing**: Vitest 3.x com coverage v8, Supertest 7.x para testes de integração HTTP  
-**Target Platform**: Node.js runtime server-side (tempo de resposta < 50ms, Lighthouse 90+)  
-**Project Type**: Web Service / Server-Side HTML Rendering Engine  
-**Performance Goals**: Tempo de renderização em memória < 10ms; resposta HTTP completa < 50ms; payload HTML minificado < 60KB  
-**Constraints**: Zero dependências de runtime JavaScript pesado no cliente; sanitização rigorosa anti-XSS; contraste de cores WCAG AA  
-**Scale/Scope**: 5 templates de nicho, 2 rotas públicas de preview, 1 rota REST de metadados, cobertura de testes > 85%
+**Testing**: Vitest 3.x com coverage v8 para testes unitários e de integração  
+**Target Platform**: Next.js App Router (tempo de resposta SSR < 50ms, Lighthouse 90+)  
+**Project Type**: Full-Stack Web Application / Server Components Visual Pitch Preview  
+**Performance Goals**: Tempo de renderização em memória < 10ms; resposta HTTP completa < 50ms; payload minificado < 60KB  
+**Constraints**: Tailwind CSS nativo, componentes React tipados, variáveis WCAG AA dinâmicas, sem vulnerabilidade XSS  
+**Scale/Scope**: 5 templates React de nicho, rota dinâmica `/preview/[slug]`, Route Handler de configuração, cobertura > 85%
 
 ---
 
@@ -40,18 +41,20 @@ O módulo conta com:
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - [x] **Princípio I: TDD Obrigatório**
-  - Testes unitários para cada estratégia de nicho (`saude.template.test.ts`, `automotivo.template.test.ts`, etc.).
-  - Testes unitários para sanitização XSS e gerador de slugs.
-  - Testes de integração para as rotas `/preview/:slug`, `/preview/:leadId` e `/api/preview/:leadId/config`.
+  - Testes unitários para cada template e detector de nicho.
+  - Testes unitários para sanitização e gerador de slugs.
+  - Testes de integração para as rotas e Route Handlers.
   - Ciclo Red-Green-Refactor estritamente mantido.
 - [x] **Princípio II: Quality Gates & CI Local**
   - Typecheck estrito (`strict: true`), ESLint zero warnings, Prettier 100% formatado, npm audit sem vulnerabilidades altas/críticas.
 - [x] **Princípio III: Clean Architecture & Desacoplamento**
-  - O Site Engine comunica-se com o Módulo 2 via DTO tipado `BrandProfile` / `BrandExtractorService` e com o banco via `SiteEngineRepository`. Nenhuma dependência cruzada espaguete.
+  - O Site Engine comunica-se com o Módulo 2 via DTO tipado `BrandProfile` / `BrandExtractorService` e com o banco via `SiteEngineRepository`. Lógica de domínio desacoplada de detalhes do framework.
 - [x] **Princípio IV: Resiliência Operacional**
   - Extração JIT com fallback inteligente para templates de nicho e cores padrão caso o perfil ainda não exista ou faltem fotos/depoimentos.
 - [x] **Princípio V: Segurança e Privacidade por Design**
-  - Proteção estrita contra XSS via escapamento sistemático de strings em componentes HTML; sem exposição de segredos.
+  - Proteção nativa contra XSS no JSX do React 19; sem exposição de segredos.
+- [x] **Princípio VI: Padrão Tecnológico Next.js 16.3.5**
+  - Utilização estrita do Next.js 16.3.5 App Router para renderização das páginas de preview e APIs.
 
 ---
 
@@ -64,52 +67,55 @@ specs/003-site-engine/
 ├── spec.md              # Feature specification com 3 user stories e decisões
 ├── checklists/
 │   └── requirements.md  # Checklist de qualidade (16/16 aprovados)
-├── research.md          # Decisões de arquitetura (SSR, Strategy, Tailwind, Slugs, JIT)
+├── research.md          # Decisões de arquitetura (Next.js 16.3.5 App Router, React 19, Strategy, Tailwind, Slugs, JIT)
 ├── data-model.md        # Prisma Schema update e DTO PreviewSiteConfig
 ├── contracts/
 │   └── site-engine.contract.ts # Schemas Zod e interfaces TypeScript
 ├── quickstart.md        # Guia prático de execução e validação
 ├── plan.md              # Este plano de implementação
-└── tasks.md             # (Será gerado pelo /speckit-tasks)
+└── tasks.md             # Tarefas de implementação
 ```
 
 ### Source Code (repository root)
 
 ```text
 src/
+├── app/
+│   ├── layout.tsx                               # Root layout Next.js 16.3.5
+│   ├── globals.css                              # Estilos globais Tailwind CSS
+│   ├── preview/
+│   │   └── [slug]/
+│   │       └── page.tsx                         # Rota pública dinâmica RSC do Visual Pitch
+│   └── api/
+│       └── preview/
+│           └── [leadId]/
+│               └── config/
+│                   └── route.ts                 # Next.js Route Handler GET /api/preview/[leadId]/config
 ├── modules/
 │   └── site-engine/
 │       ├── core/
-│       │   ├── slug-generator.ts            # Gerador de slugs kebab-case com desambiguação
-│       │   ├── html-sanitizer.ts            # Sanitizador de entidades HTML anti-XSS
-│       │   ├── niche-detector.ts            # Mapeador Categoria -> NicheTheme
-│       │   └── site-config-builder.ts       # Montador do DTO consolidado PreviewSiteConfig
-│       ├── templates/
-│       │   ├── base-layout.ts               # Layout HTML5 base (meta, styles, fonts, visual pitch badge)
-│       │   ├── niche-template.interface.ts  # Contrato Strategy da biblioteca de nichos
-│       │   ├── saude.template.ts            # Template especializado para Clínicas / Dentistas
-│       │   ├── automotivo.template.ts       # Template especializado para Oficinas / Mecânicas
-│       │   ├── gastronomia.template.ts      # Template especializado para Restaurantes / Delivery
-│       │   ├── beleza.template.ts           # Template especializado para Salões / Estética
-│       │   ├── geral.template.ts            # Template versátil de fallback para Serviços Gerais
-│       │   └── template-registry.ts         # Registro e seletor da estratégia de template
+│       │   ├── slug-generator.ts                # Gerador de slugs kebab-case com desambiguação
+│       │   ├── niche-detector.ts                # Mapeador Categoria -> NicheTheme
+│       │   └── site-config-builder.ts           # Montador do DTO consolidado PreviewSiteConfig
+│       ├── components/
+│       │   ├── BasePreviewLayout.tsx            # Wrapper de layout (SEO, metadata, fonts, styles)
+│       │   ├── VisualPitchBadge.tsx             # Selo de conversão para WhatsApp VitrineLocal
+│       │   ├── SaudeTemplate.tsx                # Template React para Clínicas / Dentistas
+│       │   ├── AutomotivoTemplate.tsx           # Template React para Oficinas / Mecânicas
+│       │   ├── GastronomiaTemplate.tsx          # Template React para Restaurantes / Delivery
+│       │   ├── BelezaTemplate.tsx               # Template React para Salões / Estética
+│       │   └── GeralTemplate.tsx                # Template React versátil de fallback para Serviços Gerais
 │       ├── repositories/
-│       │   └── site-engine.repository.ts    # Busca de lead + brandProfile por id ou slug
-│       ├── site-engine.service.ts           # Orquestrador com JIT extraction e renderização
-│       ├── site-engine.types.ts             # Tipos TypeScript do domínio
+│       │   └── site-engine.repository.ts        # Busca de lead + brandProfile por id ou slug
+│       ├── site-engine.service.ts               # Orquestrador com JIT extraction e montagem de config
+│       ├── site-engine.types.ts                 # Tipos TypeScript do domínio
 │       └── __tests__/
 │           ├── slug-generator.test.ts
-│           ├── html-sanitizer.test.ts
 │           ├── niche-detector.test.ts
 │           ├── site-config-builder.test.ts
 │           ├── templates.test.ts
 │           ├── site-engine-service.test.ts
 │           └── site-engine-repository.test.ts
-├── api/
-│   ├── routes/
-│   │   ├── preview.routes.ts                # Rotas GET /preview/:id, GET /preview/:slug, GET /api/preview/:id/config
-│   └── __tests__/
-│       └── preview-routes.test.ts           # Testes de integração Supertest
 ```
 
 ---
@@ -127,5 +133,5 @@ src/
 ### Manual Verification
 
 1. Criar ou consultar um lead qualificado no banco local.
-2. Abrir no navegador `http://localhost:3001/preview/{slug}` e inspecionar layout mobile e desktop.
+2. Abrir no navegador `http://localhost:3000/preview/{slug}` e inspecionar layout mobile e desktop.
 3. Clicar no botão do WhatsApp e no badge da VitrineLocal para testar os links diretos pré-formatados.

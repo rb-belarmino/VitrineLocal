@@ -42,7 +42,7 @@ O operador acessa a URL raiz (`http://localhost:3001/` ou `/dashboard`) no naveg
 
 **Acceptance Scenarios**:
 
-1. **Given** o servidor Express rodando, **When** o operador acessa `GET /` ou `GET /dashboard`, **Then** o sistema serve uma Single Page UI moderna e responsiva com tabela de leads qualificados.
+1. **Given** a aplicação Next.js 16.3.5 rodando, **When** o operador acessa `GET /`, **Then** o sistema renderiza a interface do Dashboard CRM moderna e responsiva com tabela de leads qualificados.
 2. **Given** a listagem de leads na tela, **When** o operador clica no botão "Ver Site de Demonstração", **Then** a página abre `/preview/:slug` (ou `/preview/:id`) em uma nova aba exibindo a landing page renderizada pelo Módulo 3.
 3. **Given** a tabela de leads, **When** o operador digita no campo de busca ou seleciona um filtro de status, **Then** a tabela filtra os leads em tempo real no cliente.
 
@@ -82,22 +82,22 @@ Para qualquer lead qualificado da lista, o operador pode clicar em "Gerar Mensag
 
 ## 3. Requisitos Funcionais (Requirements)
 
-- **FR-001**: O servidor Express DEVE servir o Portal Web do Operador na rota raiz `GET /` e `GET /dashboard`.
-- **FR-002**: O Portal DEVE ser desenvolvido com tecnologias leves, sem dependência de build separado pesado (Single Page HTML5 com Tailwind CSS moderno, design limpo, responsivo e sem bibliotecas externas desnecessárias).
+- **FR-001**: A aplicação Next.js 16.3.5 (App Router) DEVE servir o Portal Web do Operador na rota raiz `GET /` (ou `/dashboard`).
+- **FR-002**: O Portal DEVE ser desenvolvido com componentes React modernos no ecossistema Next.js 16.3.5 com Tailwind CSS, design limpo, responsivo, sem bibliotecas externas desnecessárias e tipagem estrita TypeScript.
 - **FR-003**: O Portal DEVE exibir cards com KPIs em tempo real: Total de Leads Minerados, Leads Qualificados, Previews Prontos e Leads Contatados/Convertidos.
 - **FR-004**: O Portal DEVE listar os leads com paginação ou scroll infinito, exibindo: Nome, Categoria/Nicho, Telefone, Nota Google, Score de Qualificação e Status Comercial.
-- **FR-005**: O Portal DEVE fornecer formulário interativo de busca conectado a `POST /api/radar/search` com polling de status em `GET /api/radar/jobs/:jobId`.
-- **FR-006**: O Portal DEVE permitir acionar enriquecimento de marca manual via `POST /api/brand/extract/:leadId` com botão com indicador de carregamento.
+- **FR-005**: O Portal DEVE fornecer formulário interativo de busca conectado ao Route Handler `POST /api/radar/search` com polling de status em `GET /api/radar/jobs/:jobId`.
+- **FR-006**: O Portal DEVE permitir acionar enriquecimento de marca manual via Route Handler `POST /api/brand/extract/:leadId` com botão com indicador de carregamento.
 - **FR-007**: O Portal DEVE conter botão de abertura direta do site de demonstração (`/preview/:identifier`) com atributo `target="_blank"`.
 - **FR-008**: O sistema DEVE fornecer o serviço `OutreachService` com método `generateMessage(leadId: string): Promise<OutreachMessageDTO>`.
 - **FR-009**: O prompt do Gemini para geração da abordagem DEVE seguir rigorosamente a metodologia Visual Pitch:
   - Tom: Consultivo, profissional, sem parecer spam agressivo.
   - Estrutura: Elogio sincero às avaliações do Google Maps + Pergunta sobre ausência de site oficial no perfil + Apresentação do preview funcional exclusivo criado sob medida + Chamada para feedback rápido.
 - **FR-010**: Se `GEMINI_API_KEY` não estiver definida ou a API do Gemini falhar, o `OutreachService` DEVE utilizar um template determinístico de fallback de alta conversão sem quebrar o fluxo.
-- **FR-011**: O sistema DEVE fornecer o endpoint `POST /api/outreach/generate/:leadId` retornando a mensagem gerada e o link do WhatsApp formatado, persistindo a última copy gerada em `QualifiedLead.outreachCopy`.
+- **FR-011**: O sistema DEVE fornecer o Route Handler `POST /api/outreach/generate/:leadId` retornando a mensagem gerada e o link do WhatsApp formatado, persistindo a última copy gerada em `QualifiedLead.outreachCopy`.
 - **FR-011a**: O Portal DEVE renderizar a mensagem gerada em campo `<textarea>` editável, recalculando a URL do `wa.me` dinamicamente conforme edição do operador e permitindo copiar o texto com 1 clique.
-- **FR-012**: O sistema DEVE fornecer o endpoint `PATCH /api/outreach/leads/:id/status` para transição de estágios do funil: `QUALIFIED`, `CONTACTED`, `NEGOTIATING`, `CONVERTED`, `DISQUALIFIED`, atualizando `contactedAt` ao transicionar para `CONTACTED`.
-- **FR-013**: Toda entrada de usuário e dado renderizado na interface DEVE ser sanitizado contra injeções XSS.
+- **FR-012**: O sistema DEVE fornecer o Route Handler `PATCH /api/outreach/leads/:id/status` para transição de estágios do funil: `QUALIFIED`, `CONTACTED`, `NEGOTIATING`, `CONVERTED`, `DISQUALIFIED`, atualizando `contactedAt` ao transicionar para `CONTACTED`.
+- **FR-013**: Toda entrada de usuário e dado renderizado na interface DEVE ser sanitizado contra injeções XSS aproveitando a proteção nativa do React e schemas Zod.
 - **FR-014**: O sistema DEVE manter conformidade com os 5 Quality Gates locais (`format:check`, `typecheck`, `lint`, `audit`, `test:coverage > 85%`).
 - **FR-015**: O sistema NÃO DEVE executar `git add`, `git commit` ou `git push` de acordo com as regras de governança do usuário.
 
@@ -115,7 +115,7 @@ Para qualquer lead qualificado da lista, o operador pode clicar em "Gerar Mensag
 
 ## 5. Critérios de Sucesso e Verificação
 
-1. **Dashboard Operacional Funcional**: Acessar `http://localhost:3001/` exibe o painel com métricas, lista de leads e formulário de busca ativos.
+1. **Dashboard Operacional Funcional**: Acessar `http://localhost:3000/` exibe o painel com métricas, lista de leads e formulário de busca ativos.
 2. **Ciclo Completo com 1 Clique**:
    - Iniciar busca de leads pelo formulário web;
    - Ver os leads aparecerem na tabela;

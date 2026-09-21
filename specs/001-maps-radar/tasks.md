@@ -123,13 +123,13 @@
 
 ### Tests for User Story 5 (TDD - Red Phase)
 
-- [x] T029 [P] [US5] Escrever testes de integração de API HTTP para os endpoints do Radar em `/src/api/__tests__/radar-routes.test.ts`
+- [x] T029 [P] [US5] Escrever testes de integração para os Route Handlers do Radar em `/src/app/api/__tests__/route-handlers.test.ts`
 
 ### Implementation for User Story 5
 
 - [x] T030 [US5] Implementar a fachada de serviço `RadarService` que coordena o scraper, normalizadores, fila FIFO e repositório Prisma em `/src/modules/radar/radar.service.ts`
-- [x] T031 [US5] Implementar rotas Express/Node HTTP (`POST /api/radar/search`, `GET /api/radar/jobs/:id`, `GET /api/radar/leads`) em `/src/api/routes/radar.routes.ts`
-- [x] T032 [US5] Configurar servidor HTTP principal da aplicação com middleware de erro e validação Zod em `/src/api/server.ts` (satisfaz T029)
+- [x] T031 [US5] Implementar rotas HTTP Route Handlers Next.js 16.3.5 (`POST /api/radar/search`, `GET /api/radar/jobs/:id`, `GET /api/radar/leads`) em `/src/app/api/radar/`
+- [x] T032 [US5] Configurar middleware de tratamento de erro padronizado e validação Zod para os Route Handlers em `/src/lib/api-response.ts` (satisfaz T029)
 
 **Checkpoint**: API REST HTTP do Maps Radar 100% funcional com processamento assíncrono em background.
 

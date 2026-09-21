@@ -38,6 +38,14 @@
 - Validação estrita de variáveis de ambiente no startup da aplicação.
 - Proteção contra SSRF e injeção maliciosa nos links e dados coletados do scraping antes de renderizar no Site Engine.
 
+### VI. Padrão Tecnológico Full-Stack — Next.js 16.3.5 & React 19
+- O ecossistema web, rotas públicas de preview (`/preview/[slug]`), dashboard operacional e APIs HTTP são unificados sob o framework **Next.js na versão estrita 16.3.5** (App Router, Turbopack e React 19).
+- A separação de responsabilidades é preservada:
+  - `src/modules/*`: lógica de negócios pura, adapters, repositories e serviços de domínio (sem acoplamento direto com o framework web);
+  - `src/app/*`: páginas, layouts, Server Components, Client Components e Route Handlers (`app/api/*`);
+  - `src/components/*`: componentes de interface reaproveitáveis estritamente tipados e estilizados via Tailwind CSS.
+- Não é permitida a proliferação de múltiplos servidores HTTP concorrentes (ex: Express avulso concomitantemente ao Next.js); toda a exposição HTTP é centralizada no Next.js App Router.
+
 ---
 
 ## Governança do Projeto
@@ -45,4 +53,5 @@
 - Qualquer alteração arquitetural exige atualização prévia do PRD/Spec e documentação do racional técnico.
 - Nenhuma funcionalidade é dada como concluída sem validação contra os critérios de sucesso e testes automatizados.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-21 | **Last Amended**: 2026-09-21
+**Version**: 1.1.0 | **Ratified**: 2026-09-21 | **Last Amended**: 2026-09-21
+

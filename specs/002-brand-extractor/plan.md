@@ -19,14 +19,14 @@ O Módulo 2 (Brand Extractor) é o motor de identidade visual e enriquecimento s
 **Primary Dependencies**:
 
 - `@prisma/client` + `prisma` (ORM com SQLite).
-- `express` + `@types/express` (REST API).
+- Next.js 16.3.5 Route Handlers (`app/api/brand/...`).
 - `playwright` (extração de imagens e depoimentos do perfil Google Maps).
 - `@google/genai` (SDK oficial do Google Gemini para síntese semântica estruturada).
 - `zod` (validação de schemas e contratos de API).
 
 **Storage**: SQLite via Prisma ORM (`prisma/dev.db`), tabela `BrandProfile` com chave estrangeira 1:1 para `QualifiedLead`.
 
-**Testing**: Vitest (`vitest`) para testes unitários e de integração, `supertest` para validação de endpoints HTTP REST.
+**Testing**: Vitest (`vitest`) para testes unitários e de integração de serviços e repositórios.
 
 **Target Platform**: Linux / macOS (Node.js runtime local e CI).
 
@@ -96,13 +96,13 @@ src/
 │   │       ├── brand-repository.test.ts
 │   │       └── brand-service.test.ts
 │   └── radar/                            # Módulo 1 (já em produção)
-├── api/
-│   ├── routes/
-│   │   ├── radar.routes.ts               # Rotas do Módulo 1
-│   │   └── brand.routes.ts               # POST /api/brand/extract/:leadId & GET /api/brand/:leadId
-│   ├── __tests__/
-│   │   └── brand-routes.test.ts          # Testes de integração de rotas com Supertest
-│   └── server.ts                         # Servidor Express
+├── app/
+│   └── api/
+│       ├── __tests__/
+│       │   └── route-handlers.test.ts    # Testes de integração dos Route Handlers
+│       └── brand/
+│           ├── [leadId]/route.ts         # GET /api/brand/[leadId]
+│           └── extract/[leadId]/route.ts # POST /api/brand/extract/[leadId]
 └── shared/                               # Logger, erros e utilitários
 ```
 

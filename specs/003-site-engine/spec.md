@@ -118,19 +118,19 @@ Verificar no DOM gerado a presença da barra/badge de demonstração e o botão 
 
 ### Functional Requirements
 
-- **FR-001**: O sistema DEVE fornecer um endpoint HTTP `GET /preview/:leadId` que retorna a landing page completa em HTML5 responsivo.
-- **FR-002**: O sistema DEVE suportar resolução híbrida por slug amigável indexado e persistido (`GET /preview/:slug`) e por identificador (`GET /preview/:leadId`), gerando o slug no padrão kebab-case a partir do nome e bairro do estabelecimento com desambiguação e índice único no banco de dados.
-- **FR-003**: O sistema DEVE injetar as cores primária, secundária, de destaque e fundos a partir das variáveis CSS do `BrandProfile`.
-- **FR-004**: O sistema DEVE renderizar os textos sintetizados pela IA (Headline, Subheadline, Diferenciais, Chamada para Ação) no layout do template.
-- **FR-005**: O sistema DEVE renderizar a galeria de imagens de alta resolução extraídas, com suporte a lazy-loading nativo (`loading="lazy"`).
+- **FR-001**: O sistema DEVE fornecer rota dinâmica Next.js 16.3.5 (App Router) `GET /preview/[slug]` (e resolução alternativa por id `GET /preview/[id]`) que renderiza a landing page completa em React Server Components (RSC) com HTML5 responsivo e Server-Side Rendering.
+- **FR-002**: O sistema DEVE suportar resolução híbrida por slug amigável indexado e persistido (`GET /preview/[slug]`) e por identificador único, gerando o slug no padrão kebab-case a partir do nome e bairro do estabelecimento com desambiguação e índice único no banco de dados.
+- **FR-003**: O sistema DEVE injetar as cores primária, secundária, de destaque e fundos a partir das variáveis CSS do `BrandProfile` através de CSS Variables nativas no layout ou inline styles tipados.
+- **FR-004**: O sistema DEVE renderizar os textos sintetizados pela IA (Headline, Subheadline, Diferenciais, Chamada para Ação) no layout do template React correspondente.
+- **FR-005**: O sistema DEVE renderizar a galeria de imagens de alta resolução extraídas, com suporte a lazy-loading nativo ou componente `next/image` otimizado.
 - **FR-006**: O sistema DEVE renderizar os depoimentos 5 estrelas selecionados com nome do avaliador, estrelas visuais e texto do comentário.
 - **FR-007**: O sistema DEVE disponibilizar botão de CTA direto para WhatsApp formatado no padrão internacional `https://wa.me/55{DDD}{NUMERO}?text=...`.
 - **FR-008**: O sistema DEVE incluir badge ou banner fixo de Visual Pitch indicando o status de demonstração, com botão de CTA que abre diretamente o WhatsApp comercial da VitrineLocal com mensagem pré-preenchida contendo o nome da empresa e o ID do lead.
-- **FR-009**: O sistema DEVE sanitizar rigorosamente todos os campos de texto interpolados para prevenir vulnerabilidades de Cross-Site Scripting (XSS).
-- **FR-010**: O sistema DEVE possuir biblioteca com 5 templates temáticos especializados por nicho (Saúde/Clínicas, Automotivo/Oficinas, Gastronomia/Restaurantes, Beleza/Estética, e Serviços Gerais/Padrão), com seleção automática baseada na categoria do lead e fallback para Serviços Gerais.
-- **FR-011**: O sistema DEVE disponibilizar endpoint de configuração `GET /api/preview/:leadId/config` retornando o DTO JSON dos dados consolidados de renderização.
-- **FR-012**: O sistema DEVE utilizar um motor SSR leve em TypeScript gerando HTML5 responsivo com Tailwind CSS e variáveis customizadas nativas, com tempo de renderização inferior a 50ms e zero dependências de runtime pesado no cliente.
-- **FR-013**: O sistema DEVE executar extração Just-In-Time (JIT) do `BrandProfile` automaticamente sob demanda caso a rota `/preview/:leadId` ou `/preview/:slug` seja acessada para um lead existente que ainda não possua perfil persistido, retornando 404 apenas para identificadores ou slugs inexistentes.
+- **FR-009**: O sistema DEVE sanitizar e garantir tipagem estrita contra vulnerabilidades de Cross-Site Scripting (XSS), aproveitando o escaping nativo de JSX no React 19 / Next.js 16.3.5.
+- **FR-010**: O sistema DEVE possuir biblioteca com 5 templates temáticos especializados por nicho (Saúde/Clínicas, Automotivo/Oficinas, Gastronomia/Restaurantes, Beleza/Estética, e Serviços Gerais/Padrão), modelados como componentes React e com seleção automática baseada na categoria do lead (com fallback para Serviços Gerais).
+- **FR-011**: O sistema DEVE disponibilizar Route Handler Next.js `GET /api/preview/[leadId]/config` retornando o DTO JSON dos dados consolidados de renderização.
+- **FR-012**: O sistema DEVE utilizar o framework Next.js na versão estrita 16.3.5 (App Router, Turbopack, React 19) com Tailwind CSS e variáveis customizadas nativas, com tempo de renderização server-side inferior a 50ms e Lighthouse 90+.
+- **FR-013**: O sistema DEVE executar extração Just-In-Time (JIT) do `BrandProfile` automaticamente sob demanda no Server Component caso a rota `/preview/[slug]` seja acessada para um lead existente que ainda não possua perfil persistido, retornando `notFound()` do Next.js apenas para identificadores ou slugs inexistentes.
 
 ---
 

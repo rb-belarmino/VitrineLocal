@@ -23,11 +23,12 @@
 
 3. **Arquitetura Modular Desacoplada (Clean Architecture / Hexagonal):**
    - O sistema é dividido estritamente nos 4 módulos:
-     - `Module 1: Maps Radar` (Scraper Playwright)
-     - `Module 2: Brand Extractor` (Extrator visual e semântico)
-     - `Module 3: Site Engine` (Renderizador de templates dinâmicos)
-     - `Module 4: Outreach CRM` (Copywriting IA e funil de vendas)
-   - Nenhum módulo deve depender diretamente dos detalhes de implementação do outro; a comunicação se dá por interfaces (Ports/Adapters) e schemas tipados compartilhados (ex: Zod / schemas TypeScript).
+     - `Module 1: Maps Radar` (Scraper Playwright & Ingestion)
+     - `Module 2: Brand Extractor` (Extrator visual e semântico com Gemini)
+     - `Module 3: Site Engine` (Renderizador de templates dinâmicos Next.js 16.3.5 App Router)
+     - `Module 4: Outreach CRM` (Copywriting IA, funil de vendas e Portal Next.js 16.3.5)
+   - A camada web e de rotas HTTP é unificada sob **Next.js 16.3.5 (App Router)**, com `app/api/*` como Route Handlers e `app/preview/[slug]` como páginas dinâmicas RSC.
+   - Nenhum módulo de domínio deve depender diretamente dos detalhes de implementação do outro; a comunicação se dá por interfaces (Ports/Adapters) e schemas tipados compartilhados (ex: Zod / schemas TypeScript).
 
 4. **Tratamento de Erros, Resiliência e Observabilidade:**
    - Scrapers e chamadas a APIs de IA são propensos a falhas de rede, captchas, mudanças de DOM e rate limits.

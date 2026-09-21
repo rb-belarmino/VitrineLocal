@@ -1,6 +1,12 @@
+import path from 'path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   test: {
     globals: true,
     environment: 'node',
@@ -9,7 +15,7 @@ export default defineConfig({
       NODE_ENV: 'test',
     },
     fileParallelism: false,
-    include: ['src/**/__tests__/**/*.test.ts'],
+    include: ['src/**/__tests__/**/*.test.{ts,tsx}'],
     exclude: ['node_modules', 'dist', 'specs'],
     coverage: {
       provider: 'v8',

@@ -18,7 +18,7 @@ npx prisma generate
 
 ---
 
-## 2. Inicializar o Servidor
+## 2. Inicializar a Aplicação Next.js 16.3.5
 
 Inicie a aplicação unificada VitrineLocal:
 
@@ -26,7 +26,7 @@ Inicie a aplicação unificada VitrineLocal:
 npm run dev
 ```
 
-O servidor estará ativo em `http://localhost:3001`.
+A aplicação estará ativa em `http://localhost:3000`.
 
 ---
 
@@ -37,9 +37,9 @@ O servidor estará ativo em `http://localhost:3001`.
 Abra qualquer navegador moderno em:
 
 ```text
-http://localhost:3001/
+http://localhost:3000/
 # ou
-http://localhost:3001/dashboard
+http://localhost:3000/dashboard
 ```
 
 - **Resultado Esperado**: O dashboard carrega em milissegundos com:
@@ -115,7 +115,7 @@ Valide a integridade do Módulo 4 e conformidade com a Constituição VitrineLoc
 
 ```bash
 # Executar testes unitários e de integração do Módulo 4
-npx vitest run src/modules/outreach src/api/__tests__/outreach-routes.test.ts src/api/__tests__/portal-routes.test.ts
+npx vitest run src/modules/outreach src/app/api/__tests__/route-handlers.test.ts
 
 # Validar cobertura completa (> 85%)
 npm run test:coverage

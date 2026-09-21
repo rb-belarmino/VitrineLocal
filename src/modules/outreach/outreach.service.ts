@@ -14,7 +14,7 @@ export class OutreachService implements IOutreachService {
     private readonly copyGenerator: CopyGenerator = new CopyGenerator(),
     baseUrl?: string,
   ) {
-    this.baseUrl = baseUrl || process.env['BASE_URL'] || 'http://localhost:3001';
+    this.baseUrl = baseUrl || process.env['BASE_URL'] || 'http://localhost:3000';
   }
 
   public async generateMessage(leadId: string): Promise<OutreachMessageResponse> {

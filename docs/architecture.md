@@ -47,29 +47,27 @@ flowchart TD
         ColorEngine & ReviewEngine & GeminiSynthesizer --> BrandProfile
     end
 
-    subgraph MOD3["⚡ Módulo 3: Site Engine (Templates SSR & Visual Pitch)"]
-        TemplateLib["📐 Biblioteca de Templates por Nicho<br/>Saúde, Auto, Gastro, Beleza, Geral"]
+    subgraph MOD3["⚡ Módulo 3: Site Engine (Templates React & Next.js 16.3.5)"]
+        TemplateLib["📐 Biblioteca de Templates React por Nicho<br/>Saúde, Auto, Gastro, Beleza, Geral"]
         ConfigBuilder["🧩 ConfigBuilder + SlugGenerator<br/>Montagem DTO & Sanitização"]
         JITEngine["⚙️ JIT Brand Extraction Engine<br/>Extração transparente se sem perfil"]
-        Sanitizer["🔒 HtmlSanitizer Anti-XSS<br/>Escape estrito de URIs e HTML"]
         DataInjection["🎨 Injetor de Variáveis CSS<br/>--brand-primary, --brand-secondary"]
         VisualPitchBadge["✨ Selo Demonstração VitrineLocal<br/>CTA de Reivindicação WhatsApp"]
-        SSRRender["🚀 Motor de Renderização SSR HTML5<br/>BaseLayout + TemplateRegistry"]
-        PreviewUrl["🌐 URLs Públicas de Demonstração<br/>GET /preview/:id & /preview/:slug"]
+        SSRRender["🚀 Next.js 16.3.5 App Router (RSC)<br/>app/preview/[slug]/page.tsx"]
+        PreviewUrl["🌐 URLs Públicas de Demonstração<br/>GET /preview/:slug"]
 
         BrandProfile --> ConfigBuilder
         ConfigBuilder -.->|Sem perfil?| JITEngine
         JITEngine -.-> BrandProfile
-        ConfigBuilder --> Sanitizer
-        Sanitizer --> SSRRender
+        ConfigBuilder --> SSRRender
         TemplateLib --> SSRRender
         VisualPitchBadge --> SSRRender
         DataInjection --> SSRRender
         SSRRender --> PreviewUrl
     end
 
-    subgraph MOD4["💼 Módulo 4: Outreach CRM & Portal Web"]
-        WebPortal["🖥️ Portal Web do Operador<br/>Dashboard SPA em / e /dashboard"]
+    subgraph MOD4["💼 Módulo 4: Outreach CRM & Portal Next.js 16.3.5"]
+        WebPortal["🖥️ Portal Web do Operador<br/>Next.js App Router em src/app/page.tsx"]
         GeminiAPI["💡 Google Gemini API<br/>Prompt Consultivo Visual Pitch"]
         CopyGen["✍️ Copy Personalizada de Abordagem<br/>Elogio + Alerta + Link Preview"]
         CRMHub["📊 Pipeline Comercial & Funil<br/>Mapeado ➔ Preview ➔ Contatado ➔ Fechado"]

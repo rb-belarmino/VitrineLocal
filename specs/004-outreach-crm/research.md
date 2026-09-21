@@ -7,13 +7,14 @@
 
 ## 1. Arquitetura da Interface Web do Portal (Dashboard)
 
-### Decisão Técnica: Single Page Dashboard em HTML5 / CSS Moderno (Tailwind CSS CDN) Servido Nativamente pelo Express
+### Decisão Técnica: Dashboard Integrado em Next.js 16.3.5 (App Router, React 19, Tailwind CSS)
 
-- **Contexto**: A plataforma VitrineLocal possui seu backend em Node.js / Express / TypeScript. Para o portal operacional do operador, precisamos de uma interface rápida, responsiva, sem tempo de build pesado, que se integre diretamente com as rotas já existentes.
-- **Alternativas Consideradas**:
-  1. _Novo projeto Next.js / React separado_: Exigiria gerenciar dois servidores (porta 3000 e 3001), CORS, processo de build separado e overhead de dependências adicionais.
-  2. _Single Page Dashboard servida pelo Express em `/` e `/dashboard`_: Utiliza HTML5 semântico, Tailwind CSS moderno (via script CDN oficial), componentes visuais com ícones SVG modernos (Lucide), JavaScript assíncrono nativo (`fetch`) com consumo direto das APIs REST locais (`/api/radar/...`, `/api/brand/...`, `/preview/...`).
-- **Decisão**: **Single Page Dashboard nativa no Express**. Carrega em milissegundos (< 30ms), possui zero problemas de CORS, atualiza via `fetch` assíncrono em tempo real e roda diretamente com o comando único `npm run dev`.
+- **Contexto**: A plataforma VitrineLocal unifica seu ecossistema web e de APIs no framework Next.js 16.3.5 (App Router). Para o portal operacional do operador, implementamos uma interface reativa, responsiva e performática que consome diretamente os Route Handlers (`app/api/*`) e os serviços do núcleo da aplicação.
+- **Racional da Adoção do Next.js 16.3.5**:
+  - Elimina a necessidade de servidores HTTP redundantes;
+  - Unifica o portal administrativo, as páginas de preview (`/preview/[slug]`) e os Route Handlers em um único runtime em `http://localhost:3000`;
+  - Permite utilizar componentes React com Tailwind CSS, tipagem estrita de propriedades e gerenciamento de estado claro no cliente para modais, filtros e formulários interativos.
+- **Decisão**: **Dashboard Integrado no Next.js 16.3.5 App Router (`src/app/page.tsx`)**. Carrega instantaneamente, conta com hot-reloading via Turbopack e executa com um único comando `npm run dev`.
 
 ---
 

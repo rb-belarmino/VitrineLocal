@@ -10,21 +10,22 @@
 
 O **Módulo 4 (Outreach CRM & Portal Web)** entrega a interface visual de comando operacional da VitrineLocal e o motor de copywriting consultivo com inteligência artificial:
 
-1. **Portal Web do Operador**: Single Page Application servida nativamente pelo Express nas rotas `GET /` e `GET /dashboard`, com design responsivo (Tailwind CSS), KPIs em tempo real, filtros dinâmicos, formulário de busca com polling para o Radar e links diretos para abertura dos previews (`/preview/:slug`).
+1. **Portal Web do Operador**: Interface unificada servida pelo Next.js 16.3.5 App Router na rota `GET /` (`src/app/page.tsx`), com design responsivo (Tailwind CSS), KPIs em tempo real, filtros dinâmicos, formulário de busca com polling para o Radar e links diretos para abertura dos previews (`/preview/:slug`).
 2. **Outreach CRM Engine**: Geração de abordagens no padrão Visual Pitch utilizando `@google/genai` (modelo `gemini-2.5-flash`) com fallback determinístico resiliente, modal interativo com `<textarea>` editável, recálculo em tempo real do link do WhatsApp (`https://wa.me/55...`), confirmação guiada de disparo e transição dos status do funil (`QUALIFIED`, `CONTACTED`, `NEGOTIATING`, `CONVERTED`, `DISQUALIFIED`) com persistência de `outreachCopy` e `contactedAt` no SQLite via Prisma.
 
 ---
 
 ## 2. Technical Context
 
-- **Language/Version**: TypeScript 5.x / Node.js 20+ (ESNext, ESM, `strict: true`).
-- **Primary Dependencies**: Express 4.x, `@google/genai`, Prisma Client (`@prisma/client`), Zod 3.x, Tailwind CSS (via CDN oficial), Lucide Icons.
+- **Language/Version**: TypeScript 5.7+ / Node.js 24 LTS (`strict: true`, zero `any`).
+- **Primary Framework**: Next.js 16.3.5 (App Router, Turbopack, React 19).
+- **Primary Dependencies**: `next@16.3.5`, `react@^19.0.0`, `react-dom@^19.0.0`, `@google/genai`, `@prisma/client`, `zod@^3.24.2`, `tailwindcss`, `lucide-react`.
 - **Storage**: SQLite local via Prisma ORM (tabela `QualifiedLead` estendida com `outreachCopy`, `contactedAt` e indexação).
-- **Testing**: Vitest para testes unitários e de integração, Supertest para rotas HTTP do Express, cobertura de testes > 85%.
-- **Target Platform**: Node.js runtime / Navegadores modernos (Desktop e Mobile).
-- **Project Type**: Web Application & RESTful API Service integrados.
-- **Performance Goals**: Carregamento da página do Portal < 30ms; endpoints REST < 100ms; polling de jobs a cada 1.5s sem overhead.
-- **Constraints**: Sem processo de build complexo para o frontend (SPA HTML5 nativa no Express); conformidade estrita com os 5 Quality Gates locais; sem execução automática de `git commit`.
+- **Testing**: Vitest para testes unitários e de integração, cobertura de testes > 85%.
+- **Target Platform**: Next.js App Router runtime / Navegadores modernos (Desktop e Mobile).
+- **Project Type**: Full-Stack Next.js 16.3.5 Web Application & Route Handlers integrados.
+- **Performance Goals**: Carregamento da página do Portal < 50ms; Route Handlers < 100ms; polling de jobs sem overhead.
+- **Constraints**: Conformidade estrita com os Quality Gates locais; sem execução automática de `git commit`.
 - **Scale/Scope**: Gestão de centenas de leads por sessão de prospecção com isolamento de falhas por estabelecimento.
 
 ---
@@ -35,15 +36,17 @@ _GATE: Validação contra os princípios da Constituição VitrineLocal._
 
 1. **I. Test-Driven Development (TDD) — PASS**
    - Ciclo estrito: Red (testes de rotas e serviços falham) → Green (implementação mínima) → Refactor (otimização e limpeza).
-   - Testes unitários para `CopyGenerator`, `GeminiOutreachAdapter`, `OutreachService` e testes de integração para `outreach.routes` e `portal.routes`.
+   - Testes unitários para `CopyGenerator`, `GeminiOutreachAdapter`, `OutreachService` e testes de integração para as rotas e Route Handlers.
 2. **II. Production-Ready CI & Strict Quality Gates — PASS**
    - TypeScript `strict: true` (zero `any` solto); ESLint sem warnings; `npm audit` limpo; cobertura global > 85%.
 3. **III. Modularidade & Arquitetura Limpa — PASS**
-   - Módulo 4 isolado em `src/modules/outreach/` e `src/portal/`, consumindo dados via repositórios e expondo rotas através de contratos estritos (`contracts/outreach.contract.ts`).
+   - Módulo 4 isolado em `src/modules/outreach/`, consumindo dados via repositórios e expondo rotas através de Route Handlers Next.js (`src/app/api/outreach/...`).
 4. **IV. Resiliência Operacional & Tolerância a Falhas — PASS**
    - Falha ou ausência da chave do Gemini aciona imediatamente o sintetizador determinístico com status `200 OK`; polling com tratamento de falhas; suporte flexível a telefones fixos.
 5. **V. Segurança e Privacidade por Design — PASS**
    - `GEMINI_API_KEY` injetada via `process.env`; sanitização de textos contra injeções XSS; normalização de telefones com DDI/DDD antes do envio.
+6. **VI. Padrão Tecnológico Next.js 16.3.5 — PASS**
+   - Dashboard do operador construído em Next.js 16.3.5 App Router (`src/app/page.tsx`).
 
 ---
 
@@ -69,6 +72,22 @@ specs/004-outreach-crm/
 
 ```text
 src/
+├── app/
+│   ├── page.tsx                             # Dashboard operacional do CRM no Next.js 16.3.5
+│   └── api/
+│       ├── outreach/
+│       │   ├── generate/
+│       │   │   └── [leadId]/
+│       │   │       └── route.ts             # POST /api/outreach/generate/:leadId
+│       │   └── leads/
+│       │       └── [id]/
+│       │           └── status/
+│       │               └── route.ts         # PATCH /api/outreach/leads/:id/status
+│       └── portal/
+│           ├── stats/
+│           │   └── route.ts                 # GET /api/portal/stats
+│           └── leads/
+│               └── route.ts                 # GET /api/portal/leads
 ├── modules/
 │   └── outreach/
 │       ├── core/
@@ -81,18 +100,6 @@ src/
 │       └── __tests__/
 │           ├── copy-generator.test.ts       # Testes unitários do gerador de pitch
 │           └── outreach-service.test.ts     # Testes de unidade e integração do serviço
-├── portal/
-│   ├── index.html                           # Single Page Application moderna (Tailwind CSS)
-│   ├── portal.js                            # Lógica interativa do cliente (fetch, polling, modais)
-│   └── portal-service.ts                    # Serviço que entrega a UI nas rotas do Express
-└── api/
-    ├── routes/
-    │   ├── outreach.routes.ts               # Endpoints POST /generate/:leadId, PATCH /leads/:id/status
-    │   └── portal.routes.ts                 # Endpoints GET /, GET /dashboard, GET /api/portal/stats
-    ├── __tests__/
-    │   ├── outreach-routes.test.ts          # Testes de integração dos endpoints de Outreach
-    │   └── portal-routes.test.ts            # Testes de integração das rotas do Portal
-    └── server.ts                            # Registro dos routers no Express
 ```
 
 ---
@@ -114,10 +121,10 @@ src/
 
 ### Phase 3: Portal Web Dashboard & Gestão de Leads (User Story 1 - P1)
 
-1. Criar testes para as rotas do Portal (`GET /`, `GET /dashboard`, `GET /api/portal/stats`).
-2. Implementar `portal.routes.ts` e `portal-service.ts`.
-3. Criar `src/portal/index.html` com:
-   - Header com contadores de KPI consolidados.
+1. Criar testes para os Route Handlers do Portal (`GET /api/portal/stats`, `GET /api/portal/leads`).
+2. Implementar os Route Handlers do Next.js App Router em `src/app/api/portal/*`.
+3. Criar `src/app/page.tsx` com:
+   - Header com contadores de KPI consolidados em tempo real.
    - Tabela de leads com filtros por nicho/status, busca instantânea e badges visuais.
    - Indicador dinâmico de "Preview Pronto" e botão direto de abertura em nova aba (`/preview/:identifier`).
 

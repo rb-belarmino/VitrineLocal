@@ -6,23 +6,23 @@
 
 ---
 
-## 1. Motor de Renderização e Entrega HTML (SSR Leve)
+## 1. Motor de Renderização e Entrega (Next.js 16.3.5 App Router & RSC)
 
 ### Decisão
 
-Utilizar um **Motor de Templates Funcional SSR nativo em TypeScript** com funções de componentes tipadas e sanitização nativa de entidades HTML (`escapeHtml`), sem dependência de frameworks pesados no cliente.
+Utilizar o **Next.js na versão 16.3.5 (App Router, React 19, Turbopack)** com **React Server Components (RSC)** na rota dinâmica `/preview/[slug]`. Os templates de nicho são implementados como componentes React puros renderizados no servidor, com estilização Tailwind CSS e injeção de CSS Variables dinâmicas.
 
 ### Racional
 
-1. **Velocidade Extrema**: Renderização direta em memória em menos de 10 milissegundos, com tempo total de resposta HTTP (`GET /preview/:slug` ou `:leadId`) inferior a 40ms.
-2. **Zero Client-Side JavaScript**: As landing pages entregam HTML5 e CSS puros. Não há React, Vue ou runtime de cliente para hidratar, resultando em pontuação 95+ no Google Lighthouse e carregamento instantâneo em conexões móveis 3G/4G.
-3. **Imunidade a XSS por Design**: Todas as variáveis mineradas ou sintetizadas por IA (depoimentos, nomes, endereços) passam obrigatoriamente pela sanitização de entidades (`&`, `<`, `>`, `"`, `'`) antes de serem interpoladas no HTML.
-4. **Testabilidade Imbatível**: Componentes de template são funções puras `(config: PreviewSiteConfig) => string`, permitindo testes unitários instantâneos com Vitest e validações de DOM com Cheerio.
+1. **Unificação Tecnológica**: Toda a aplicação (previews, portal administrativo e APIs) opera sob um único ecossistema full-stack moderno, eliminando a discrepância entre backend Express e frontend estático.
+2. **React Server Components (RSC)**: Os previews rodam exclusivamente no servidor, gerando HTML enxuto com zero bundle de JavaScript desnecessário para o cliente, mantendo o carregamento ultrarrápido (Lighthouse 90+) e SEO/OpenGraph perfeito.
+3. **Imunidade a XSS Nativa**: O JSX do React 19 realiza escape automático de strings contra injeção de tags HTML maliciosas, complementado por tipagem estrita de Zod.
+4. **Turbopack & Hot-Reloading**: O compilador Turbopack do Next.js 16.3.5 proporciona inicialização e atualizações instantâneas no ciclo de desenvolvimento.
 
 ### Alternativas Avaliadas
 
-- **Next.js / React SSR**: Adicionaria complexidade excessiva, build separado, overhead de hidratação no cliente e tempo de resposta superior a 300ms. Rejeitado.
-- **EJS / Mustache / Handlebars**: Não possuem tipagem estrita de TypeScript em tempo de compilação, dificultando refatorações e violando nossa constituição de tipagem estrita. Rejeitado.
+- **Express + Strings de HTML puro**: Foi utilizado na prova de conceito inicial, mas apresentava manutenção difícil de layouts complexos e exigia manter dois processos ou servidores separados do portal. Substituído pelo Next.js 16.3.5.
+- **EJS / Mustache / Handlebars**: Rejeitado por falta de tipagem estrita e ausência de integração moderna com componentes React.
 
 ---
 

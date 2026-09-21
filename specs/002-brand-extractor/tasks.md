@@ -98,13 +98,13 @@
 ### Tests for Service and API (TDD - Write First) ⚠️
 
 - [x] T021 [P] Escrever testes unitários para o serviço orquestrador em `src/modules/brand/__tests__/brand-service.test.ts`
-- [x] T022 [P] Escrever testes de integração das rotas REST em `src/api/__tests__/brand-routes.test.ts`
+- [x] T022 [P] Escrever testes de integração dos Route Handlers em `src/app/api/__tests__/route-handlers.test.ts`
 
 ### Implementation
 
 - [x] T023 Implementar `BrandExtractorService` em `src/modules/brand/brand.service.ts` unindo US1, US2 e US3, com suporte a cache no banco SQLite e parâmetro `force=true`
-- [x] T024 Implementar rotas Express `POST /api/brand/extract/:leadId` e `GET /api/brand/:leadId` em `src/api/routes/brand.routes.ts`
-- [x] T025 Registrar rotas de marca no servidor principal em `src/api/server.ts`
+- [x] T024 Implementar rotas Route Handlers Next.js 16.3.5 `POST /api/brand/extract/[leadId]` e `GET /api/brand/[leadId]` em `src/app/api/brand/`
+- [x] T025 Registrar e exportar instâncias compartilhadas dos serviços em `src/lib/services.ts`
 
 **Checkpoint**: API REST operacional respondendo nos endpoints `/api/brand/*`.
 

@@ -18,7 +18,7 @@
 - [x] Success criteria are measurable
 - [x] All acceptance scenarios are defined (Given / When / Then)
 - [x] Edge cases are identified (Mobile/landline detection, API Gemini fallback, job failures)
-- [x] Scope is clearly bounded (Single Page Portal servido no Express + Outreach Service + Status Transition)
+- [x] Scope is clearly bounded (Portal Web Next.js 16.3.5 App Router + Outreach Service + Status Transition)
 - [x] Dependencies and assumptions identified
 
 ## Feature Readiness
@@ -30,7 +30,7 @@
 ## Notes
 
 - Especificação cobre a experiência completa de ponta a ponta:
-  1. Portal Web responsivo em `GET /` e `GET /dashboard` integrado ao Express.
+  1. Portal Web responsivo em `GET /` integrado ao Next.js 16.3.5 App Router.
   2. Formulário de busca e acompanhamento em tempo real da mineração do Maps.
   3. Tabela com visualização dos leads, scores e botão de abertura direta dos sites de demonstração gerados.
   4. Gerador de copy de abordagem consultiva via Gemini IA (com fallback resiliente determinístico).
