@@ -18,8 +18,7 @@
     "test:coverage": "vitest run --coverage",
     "audit": "npm audit --audit-level=high",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prepare": "husky"
+    "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@google/genai": "^2.23.0",
@@ -38,7 +37,6 @@
     "@vitest/coverage-v8": "^3.0.6",
     "eslint": "^9.20.1",
     "globals": "^15.15.0",
-    "husky": "^9.1.7",
     "prettier": "^3.5.1",
     "prisma": "^6.4.1",
     "supertest": "^7.0.0",
