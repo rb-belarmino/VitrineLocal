@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+coverage/
+package-lock.json
+*.db
+*.db-journal
+test-results/
+playwright-report/
+.specify/

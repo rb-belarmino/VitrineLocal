@@ -1,0 +1,94 @@
+### ==============================================================================
+### VitrineLocal - Testes de API com REST Client (VS Code / Antigravity)
+### Certifique-se de que a API esteja rodando no terminal com: npm run dev
+### ==============================================================================
+
+@baseUrl = http://localhost:3001
+@contentType = application/json
+
+### 1. Health Check
+# Verifica a saúde do servidor e uptime
+GET {{baseUrl}}/health
+Content-Type: {{contentType}}
+
+###
+
+### 2. Disparar Varredura no Google Maps (Módulo 1: Radar)
+# Envia requisição assíncrona. Retorna HTTP 202 com o jobId gerado.
+# @name startSearch
+POST {{baseUrl}}/api/radar/search
+Content-Type: {{contentType}}
+
+{
+  "niche": "Oficina Mecânica",
+  "location": "Moema, São Paulo",
+  "limit": 5
+}
+
+###
+
+### 3. Consultar Status do Job (Dinâmico via REST Client)
+# Lê automaticamente o jobId retornado na requisição anterior (#2 startSearch)
+# Status evolui: PENDING -> RUNNING -> COMPLETED (ou FAILED)
+@activeJobId = {{startSearch.response.body.jobId}}
+GET {{baseUrl}}/api/radar/jobs/{{activeJobId}}
+Content-Type: {{contentType}}
+
+###
+
+### 4. Consultar Status do Job (ID Específico / Manual)
+# Substitua pelo ID desejado caso queira consultar um job histórico
+GET {{baseUrl}}/api/radar/jobs/20d8d117-c19b-4678-be82-2985e5444c35
+Content-Type: {{contentType}}
+
+###
+
+### 5. Listar Todos os Leads Qualificados (Sem Site Próprio)
+# Retorna leads com status QUALIFIED ordenados por qualificationScore DESC
+GET {{baseUrl}}/api/radar/leads?status=QUALIFIED&limit=20
+Content-Type: {{contentType}}
+
+###
+
+### 6. Listar Leads de Alta Prioridade Comercial (Score >= 70)
+# Filtra leads com score comercial elevado (alta reputação no Maps e sem site)
+GET {{baseUrl}}/api/radar/leads?status=QUALIFIED&minScore=70&limit=10
+Content-Type: {{contentType}}
+
+###
+
+### 7. Listar Leads Filtrados por Job Específico
+# Retorna apenas os leads garimpados na execução da busca anterior
+GET {{baseUrl}}/api/radar/leads?searchJobId={{activeJobId}}&limit=50
+Content-Type: {{contentType}}
+
+###
+
+### 8. Listar Leads Desqualificados (Auditoria de Descarte)
+# Visualiza empresas que já possuem site ou foram descartadas
+GET {{baseUrl}}/api/radar/leads?status=DISQUALIFIED&limit=10
+Content-Type: {{contentType}}
+
+###
+
+### 9. Teste de Validação de Input (400 Bad Request)
+# Demonstra o tratamento de erro com Zod quando campos obrigatórios estão ausentes
+POST {{baseUrl}}/api/radar/search
+Content-Type: {{contentType}}
+
+{
+  "niche": "",
+  "limit": -5
+}
+
+###
+
+### 10. Outra Busca de Exemplo: Clínica Odontológica em Pinheiros
+POST {{baseUrl}}/api/radar/search
+Content-Type: {{contentType}}
+
+{
+  "niche": "Dentista",
+  "location": "Pinheiros, São Paulo",
+  "limit": 5
+}

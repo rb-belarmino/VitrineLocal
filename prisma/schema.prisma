@@ -1,0 +1,54 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model SearchJob {
+  id                String          @id @default(uuid())
+  niche             String
+  location          String
+  limitRequested    Int             @default(20)
+  totalFound        Int             @default(0)
+  totalQualified    Int             @default(0)
+  totalDisqualified Int             @default(0)
+  status            String          @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED
+  errorMessage      String?
+  startedAt         DateTime        @default(now())
+  finishedAt        DateTime?
+  leads             QualifiedLead[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([status])
+}
+
+model QualifiedLead {
+  id                     String     @id @default(uuid())
+  businessName           String
+  category               String     @default("Serviços Locais")
+  address                String?
+  phoneRaw               String?
+  phoneNormalized        String?
+  isMobile               Boolean    @default(false)
+  websiteRaw             String?
+  websiteType            String     // NO_WEBSITE, SOCIAL_ONLY, OWN_WEBSITE
+  socialLinks            String     @default("[]") // JSON stringified array of URLs
+  rating                 Float      @default(0.0)
+  reviewCount            Int        @default(0)
+  qualificationScore     Int        @default(0)
+  status                 String     // QUALIFIED, DISQUALIFIED
+  disqualificationReason String?
+  mapsUrl                String     @unique
+  searchJobId            String?
+  searchJob              SearchJob? @relation(fields: [searchJobId], references: [id], onDelete: SetNull)
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+
+  @@index([status])
+  @@index([phoneNormalized])
+  @@index([category])
+}
