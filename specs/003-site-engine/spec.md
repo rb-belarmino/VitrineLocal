@@ -15,6 +15,16 @@ Quando o operador comercial ou o pipeline de outreach abordar o dono do estabele
 
 ---
 
+## Clarifications
+
+### Session 2026-09-21
+
+- Q: Como deve ser a ação de clique no selo/badge de demonstração ("Quero este site para minha empresa") da VitrineLocal? → A: Redirecionamento direto para o WhatsApp comercial da VitrineLocal (`https://wa.me/...`) com mensagem pré-formatada contendo nome da empresa e ID do lead.
+- Q: Como deve ser a estratégia de geração e persistência do `slug` para resolução da rota `/preview/:slug`? → A: Persistir o campo `slug` com índice único (`@unique`) no modelo `QualifiedLead`, gerado em padrão kebab-case a partir de `nome-bairro` com garantia de unicidade.
+- Q: Quando uma rota `/preview/:id` (ou `/preview/:slug`) for acessada para um lead que ainda NÃO possui o `BrandProfile` extraído, qual deve ser o comportamento? → A: Extração Just-In-Time (JIT) automática sob demanda via `BrandExtractorService` com persistência no banco e renderização imediata, retornando HTTP 404 apenas se o lead não existir no sistema.
+
+---
+
 ## 2. User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Renderização Dinâmica da Landing Page de Demonstração (Priority: P1)
@@ -40,9 +50,12 @@ Pode ser testado de forma isolada fazendo uma requisição HTTP `GET /preview/:l
 3. **Given** as cores primária, secundária e de destaque do `BrandProfile`,  
    **When** o CSS da página for carregado,  
    **Then** as variáveis CSS (`--brand-primary`, `--brand-secondary`, etc.) devem ser injetadas dinamicamente com contraste WCAG AA garantido.
-4. **Given** que o lead não possui `BrandProfile` previamente extraído,  
-   **When** o endpoint `/preview/:leadId` for acessado,  
-   **Then** o serviço deve orquestrar a extração sob demanda ou retornar status HTTP 404 informativo com instrução para executar a extração inicial.
+4. **Given** que o lead qualificado existe no banco mas ainda não possui `BrandProfile` previamente extraído,  
+   **When** o endpoint `/preview/:leadId` ou `/preview/:slug` for acessado,  
+   **Then** o serviço deve executar automaticamente a extração Just-In-Time (JIT) sob demanda via `BrandExtractorService`, salvar o perfil no banco e retornar a landing page renderizada com sucesso (HTTP 200).
+5. **Given** um leadId ou slug inexistente no banco de dados,  
+   **When** a requisição for recebida,  
+   **Then** o sistema deve retornar status HTTP 404 com página de erro limpa e amigável.
 
 ---
 
@@ -88,7 +101,7 @@ Verificar no DOM gerado a presença da barra/badge de demonstração e o botão 
    **Then** uma barra superior sutil ou badge flutuante deve indicar que o site é uma demonstração exclusiva.
 2. **Given** a barra de demonstração,  
    **When** o lead clicar no botão de contratação/reivindicação do site,  
-   **Then** deve ser direcionado para o contato comercial da VitrineLocal informando o ID do lead.
+   **Then** deve ser direcionado para o WhatsApp comercial da VitrineLocal com mensagem pré-formatada contendo o nome da empresa e o ID do lead.
 
 ---
 
@@ -106,28 +119,30 @@ Verificar no DOM gerado a presença da barra/badge de demonstração e o botão 
 ### Functional Requirements
 
 - **FR-001**: O sistema DEVE fornecer um endpoint HTTP `GET /preview/:leadId` que retorna a landing page completa em HTML5 responsivo.
-- **FR-002**: O sistema DEVE suportar resolução híbrida por slug amigável `GET /preview/:slug` (gerado deterministicamente a partir de nome + bairro/cidade) e por identificador `GET /preview/:leadId`.
+- **FR-002**: O sistema DEVE suportar resolução híbrida por slug amigável indexado e persistido (`GET /preview/:slug`) e por identificador (`GET /preview/:leadId`), gerando o slug no padrão kebab-case a partir do nome e bairro do estabelecimento com desambiguação e índice único no banco de dados.
 - **FR-003**: O sistema DEVE injetar as cores primária, secundária, de destaque e fundos a partir das variáveis CSS do `BrandProfile`.
 - **FR-004**: O sistema DEVE renderizar os textos sintetizados pela IA (Headline, Subheadline, Diferenciais, Chamada para Ação) no layout do template.
 - **FR-005**: O sistema DEVE renderizar a galeria de imagens de alta resolução extraídas, com suporte a lazy-loading nativo (`loading="lazy"`).
 - **FR-006**: O sistema DEVE renderizar os depoimentos 5 estrelas selecionados com nome do avaliador, estrelas visuais e texto do comentário.
 - **FR-007**: O sistema DEVE disponibilizar botão de CTA direto para WhatsApp formatado no padrão internacional `https://wa.me/55{DDD}{NUMERO}?text=...`.
-- **FR-008**: O sistema DEVE incluir badge ou banner fixo de Visual Pitch indicando o status de demonstração e CTA para a VitrineLocal.
+- **FR-008**: O sistema DEVE incluir badge ou banner fixo de Visual Pitch indicando o status de demonstração, com botão de CTA que abre diretamente o WhatsApp comercial da VitrineLocal com mensagem pré-preenchida contendo o nome da empresa e o ID do lead.
 - **FR-009**: O sistema DEVE sanitizar rigorosamente todos os campos de texto interpolados para prevenir vulnerabilidades de Cross-Site Scripting (XSS).
 - **FR-010**: O sistema DEVE possuir biblioteca com 5 templates temáticos especializados por nicho (Saúde/Clínicas, Automotivo/Oficinas, Gastronomia/Restaurantes, Beleza/Estética, e Serviços Gerais/Padrão), com seleção automática baseada na categoria do lead e fallback para Serviços Gerais.
 - **FR-011**: O sistema DEVE disponibilizar endpoint de configuração `GET /api/preview/:leadId/config` retornando o DTO JSON dos dados consolidados de renderização.
 - **FR-012**: O sistema DEVE utilizar um motor SSR leve em TypeScript gerando HTML5 responsivo com Tailwind CSS e variáveis customizadas nativas, com tempo de renderização inferior a 50ms e zero dependências de runtime pesado no cliente.
+- **FR-013**: O sistema DEVE executar extração Just-In-Time (JIT) do `BrandProfile` automaticamente sob demanda caso a rota `/preview/:leadId` ou `/preview/:slug` seja acessada para um lead existente que ainda não possua perfil persistido, retornando 404 apenas para identificadores ou slugs inexistentes.
 
 ---
 
 ## 4. Key Entities _(include if feature involves data)_
 
+- **QualifiedLead**: Extendido com o campo `slug: String? @unique` indexado no SQLite/Prisma.
 - **PreviewSiteConfig**: DTO consolidado contendo os dados mesclados de `QualifiedLead` e `BrandProfile` prontos para alimentar o template:
   - `leadId`: Identificador único do lead
-  - `slug`: Identificador amigável de rota pública
+  - `slug`: Identificador amigável de rota pública (persistido e único)
   - `businessName`: Nome do estabelecimento
   - `category`: Categoria ou nicho detectado
-  - `nicheTheme`: Identificador do template selecionado (`saude`, `automotivo`, `gastronomia`, `beleza`, `geral`)
+  - `nicheTheme`: Enum do template selecionado (`'saude' | 'automotivo' | 'gastronomia' | 'beleza' | 'geral'`)
   - `contact`: Telefone normalizado, link de WhatsApp e endereço completo
   - `theme`: Cores primária, secundária, de destaque, contraste e estilo de fontes
   - `content`: Headline, subheadline, diferenciais, serviços sugeridos

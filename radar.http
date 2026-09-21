@@ -119,3 +119,27 @@ Content-Type: {{contentType}}
 POST {{baseUrl}}/api/brand/extract/20d8d117-c19b-4678-be82-2985e5444c35?force=true
 Content-Type: {{contentType}}
 
+###
+
+### ==============================================================================
+### MÓDULO 3: SITE ENGINE (VISUAL PITCH PREVIEWS)
+### ==============================================================================
+
+### 14. Renderizar Preview HTML por UUID do Lead
+# Renderiza página HTML5 completa e responsiva. Se o lead não tiver perfil, roda extração JIT.
+GET {{baseUrl}}/preview/20d8d117-c19b-4678-be82-2985e5444c35
+
+###
+
+### 15. Renderizar Preview HTML por Slug Amigável
+# Acessa a landing page usando a URL amigável kebab-case gerada automaticamente
+GET {{baseUrl}}/preview/oficina-precision-moema
+
+###
+
+### 16. Consultar DTO Estruturado do Preview (JSON)
+# Retorna todas as variáveis, cores, textos sanitizados e links do Visual Pitch
+GET {{baseUrl}}/api/preview/20d8d117-c19b-4678-be82-2985e5444c35/config
+Content-Type: {{contentType}}
+
+

@@ -31,7 +31,9 @@
 
 ## Notes
 
-- 3 decisões de especificação calibradas e aprovadas:
-  1. Motor SSR leve nativo em TypeScript/Node.js com Tailwind CSS (respostas < 50ms, zero hydration issues).
-  2. Roteamento híbrido por slug amigável (`/preview/:slug`) e ID (`/preview/:leadId`).
+- Especificação e clarificações aprovadas (16/16 itens válidos):
+  1. Motor SSR leve nativo com Tailwind CSS e variáveis customizadas (respostas < 50ms, zero hydration issues).
+  2. Roteamento híbrido por slug amigável (`/preview/:slug`) e ID (`/preview/:leadId`) com persistência única de slug.
   3. Biblioteca inicial de 5 nichos (Saúde, Automotivo, Gastronomia, Beleza e Serviços Gerais) com fallback automático.
+  4. Selo de demonstração ("Quero este site") com link direto para o WhatsApp comercial da VitrineLocal.
+  5. Extração Just-In-Time (JIT) sob demanda caso o lead ainda não tenha o perfil extraído no primeiro acesso.

@@ -6,6 +6,9 @@ import { createRadarRoutes } from './routes/radar.routes';
 import { BrandExtractorService } from '../modules/brand/brand.service';
 import { BrandRepository } from '../modules/brand/repositories/brand.repository';
 import { createBrandRoutes } from './routes/brand.routes';
+import { SiteEngineService } from '../modules/site-engine/site-engine.service';
+import { SiteEngineRepository } from '../modules/site-engine/repositories/site-engine.repository';
+import { createPreviewHtmlRoutes, createPreviewApiRoutes } from './routes/preview.routes';
 import { AppError } from '../shared/errors/app-error';
 import { Logger } from '../shared/logger/logger';
 
@@ -13,11 +16,14 @@ export function createApp(
   prismaClient?: PrismaClient,
   radarService?: RadarService,
   brandService?: BrandExtractorService,
+  siteEngineService?: SiteEngineService,
 ) {
   const app = express();
   const prisma = prismaClient ?? new PrismaClient();
   const rService = radarService ?? new RadarService(prisma);
   const bService = brandService ?? new BrandExtractorService(new BrandRepository(prisma));
+  const sService =
+    siteEngineService ?? new SiteEngineService(new SiteEngineRepository(prisma), bService);
 
   app.use(express.json());
 
@@ -31,6 +37,10 @@ export function createApp(
 
   // Rotas do Brand Extractor (Módulo 2)
   app.use('/api/brand', createBrandRoutes(bService));
+
+  // Rotas do Site Engine (Módulo 3)
+  app.use('/preview', createPreviewHtmlRoutes(sService));
+  app.use('/api/preview', createPreviewApiRoutes(sService));
 
   // Middleware global de tratamento de erros
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {

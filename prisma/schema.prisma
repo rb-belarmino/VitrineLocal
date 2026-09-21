@@ -28,6 +28,7 @@ model SearchJob {
 
 model QualifiedLead {
   id                     String     @id @default(uuid())
+  slug                   String?    @unique
   businessName           String
   category               String     @default("Serviços Locais")
   address                String?
@@ -49,6 +50,7 @@ model QualifiedLead {
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
 
+  @@index([slug])
   @@index([status])
   @@index([phoneNormalized])
   @@index([category])

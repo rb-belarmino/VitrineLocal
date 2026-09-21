@@ -46,16 +46,25 @@ flowchart TD
         ColorEngine & ReviewEngine & GeminiSynthesizer --> BrandProfile
     end
 
-    subgraph MOD3["Módulo 3: Site Engine (Templates & Preview)"]
-        TemplateLib[Biblioteca de Templates Tailwind<br/>Saúde, Gastronomia, Automotivo, Serviços]
-        DataInjection[Injetor de Dados Dinâmicos<br/>CSS Variables + Conteúdo Real + CTA WhatsApp]
-        PublicEdge[Hospedagem & Edge Cache Next.js]
-        PreviewUrl[URL Pública de Demonstração<br/>preview.vitrinelocal.com.br/empresa]
+    subgraph MOD3["Módulo 3: Site Engine (Templates SSR & Visual Pitch)"]
+        TemplateLib[Estratégia de Templates por Nicho<br/>Saúde, Automotivo, Gastronomia, Beleza, Geral]
+        ConfigBuilder[SiteConfigBuilder + SlugGenerator<br/>Montagem do DTO & Desambiguação de Slug]
+        JITEngine[JIT Brand Extraction Engine<br/>Extração transparente se perfil inexistente]
+        Sanitizer[HtmlSanitizer Anti-XSS<br/>Escape estrito + Sanitização de URIs]
+        DataInjection[Injetor de Variáveis CSS & Meta<br/>--brand-primary, --brand-secondary, Meta/OG]
+        VisualPitchBadge[Selo de Demonstração VitrineLocal<br/>CTA de Reivindicação via WhatsApp]
+        SSRRender[Motor de Renderização SSR HTML5<br/>BaseLayout + TemplateRegistry]
+        PreviewUrl[URLs Públicas de Demonstração<br/>GET /preview/:id & GET /preview/:slug]
 
-        BrandProfile --> DataInjection
-        TemplateLib --> DataInjection
-        DataInjection --> PublicEdge
-        PublicEdge --> PreviewUrl
+        BrandProfile --> ConfigBuilder
+        ConfigBuilder -.->|Sem perfil?| JITEngine
+        JITEngine -.-> BrandProfile
+        ConfigBuilder --> Sanitizer
+        Sanitizer --> SSRRender
+        TemplateLib --> SSRRender
+        VisualPitchBadge --> SSRRender
+        DataInjection --> SSRRender
+        SSRRender --> PreviewUrl
     end
 
     subgraph MOD4["Módulo 4: Outreach CRM (Copy Gemini & Pipeline)"]
