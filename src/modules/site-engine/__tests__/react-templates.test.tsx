@@ -8,7 +8,7 @@ import { BelezaTemplate } from '../components/BelezaTemplate';
 import { GeralTemplate } from '../components/GeralTemplate';
 import { PreviewSiteConfig } from '../site-engine.types';
 
-describe('React Templates & Next.js 16.3.5 Components', () => {
+describe('React Templates & Next.js 16.3.5 Components (Pro Redesign Suite)', () => {
   const baseConfig: PreviewSiteConfig = {
     leadId: '11111111-2222-3333-4444-555555555555',
     slug: 'empresa-exemplo',
@@ -61,16 +61,18 @@ describe('React Templates & Next.js 16.3.5 Components', () => {
     },
   };
 
-  it('deve renderizar SaudeTemplate com dados e elementos semânticos', () => {
+  it('deve renderizar SaudeTemplate com dados, autoridade clínica, FAQ e sticky bar', () => {
     const html = renderToString(<SaudeTemplate config={baseConfig} />);
     expect(html).toContain('Clínica Sorriso Prime');
     expect(html).toContain('Seu Sorriso Perfeito Começa Aqui');
     expect(html).toContain('4.9');
     expect(html).toContain('Implantes');
     expect(html).toContain('Maria Silva');
+    expect(html).toContain('<details');
+    expect(html).toContain('md:hidden');
   });
 
-  it('deve renderizar AutomotivoTemplate com layout automotivo', () => {
+  it('deve renderizar AutomotivoTemplate com layout dark industrial e garantias', () => {
     const autoConfig: PreviewSiteConfig = {
       ...baseConfig,
       businessName: 'Auto Mecânica Precision',
@@ -85,10 +87,12 @@ describe('React Templates & Next.js 16.3.5 Components', () => {
     const html = renderToString(<AutomotivoTemplate config={autoConfig} />);
     expect(html).toContain('Auto Mecânica Precision');
     expect(html).toContain('Revisão Completa');
-    expect(html).toContain('Nossos Serviços Automotivos');
+    expect(html).toContain('Manutenção Preventiva');
+    expect(html).toContain('Garantia em Peças');
+    expect(html).toContain('md:hidden');
   });
 
-  it('deve renderizar GastronomiaTemplate com layout gastronômico', () => {
+  it('deve renderizar GastronomiaTemplate com layout gastronômico e destaques', () => {
     const gastroConfig: PreviewSiteConfig = {
       ...baseConfig,
       businessName: 'Pizzaria Bella Napoli',
@@ -98,9 +102,10 @@ describe('React Templates & Next.js 16.3.5 Components', () => {
     const html = renderToString(<GastronomiaTemplate config={gastroConfig} />);
     expect(html).toContain('Pizzaria Bella Napoli');
     expect(html).toContain('Nossas Especialidades');
+    expect(html).toContain('md:hidden');
   });
 
-  it('deve renderizar BelezaTemplate com layout de estética', () => {
+  it('deve renderizar BelezaTemplate com layout de estética e variante automática', () => {
     const belezaConfig: PreviewSiteConfig = {
       ...baseConfig,
       businessName: 'Studio Glamour Estética',
@@ -110,9 +115,10 @@ describe('React Templates & Next.js 16.3.5 Components', () => {
     const html = renderToString(<BelezaTemplate config={belezaConfig} />);
     expect(html).toContain('Studio Glamour Estética');
     expect(html).toContain('Procedimentos &amp; Especialidades');
+    expect(html).toContain('md:hidden');
   });
 
-  it('deve renderizar GeralTemplate como fallback universal', () => {
+  it('deve renderizar GeralTemplate como fallback universal profissional', () => {
     const geralConfig: PreviewSiteConfig = {
       ...baseConfig,
       businessName: 'Chaveiro Central 24h',
@@ -121,7 +127,8 @@ describe('React Templates & Next.js 16.3.5 Components', () => {
     };
     const html = renderToString(<GeralTemplate config={geralConfig} />);
     expect(html).toContain('Chaveiro Central 24h');
-    expect(html).toContain('Por que somos referência?');
+    expect(html).toContain('O que oferecemos para você');
+    expect(html).toContain('md:hidden');
   });
 
   it('TemplateSelector deve selecionar o template correto baseado no nicheTheme e injetar CSS variables', () => {

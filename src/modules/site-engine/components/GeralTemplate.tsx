@@ -1,131 +1,235 @@
 import type { PreviewSiteConfig } from '../site-engine.types';
+import { getNicheFallbackHeroImage } from '../core/template-fallbacks';
+import { StickyMobileBar } from './StickyMobileBar';
+import { VisualPitchFooter } from './VisualPitchBadge';
 
 export function GeralTemplate({ config }: { config: PreviewSiteConfig }) {
-  const { businessName, content, contact, socialProof, gallery, theme } = config;
-  const heroImage = gallery.heroImageUrl || gallery.photos[0];
+  const { businessName, content, contact, socialProof, gallery, theme, visualPitch } = config;
+
+  const heroImage =
+    gallery.heroImageUrl ||
+    gallery.photos[0] ||
+    getNicheFallbackHeroImage('geral', config.category, businessName);
+
+  const mapsUrl = contact.address
+    ? `https://maps.google.com/?q=${encodeURIComponent(contact.address)}`
+    : undefined;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">{businessName}</h1>
-            <p className="text-xs text-slate-500 font-medium">
-              {config.category || 'Serviços Especializados'}
-            </p>
+    <div className="flex flex-col min-h-screen font-sans bg-slate-50 text-slate-900 pb-24 md:pb-0">
+      {/* Header Sticky Modern Agency */}
+      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {gallery.logoUrl ? (
+              <img
+                src={gallery.logoUrl}
+                alt={businessName}
+                className="h-10 w-10 rounded-xl object-cover border border-blue-200"
+              />
+            ) : (
+              <div
+                style={{ backgroundColor: theme.primaryColor || '#2563EB' }}
+                className="h-10 w-10 rounded-xl flex items-center justify-center font-bold text-white shadow-sm"
+              >
+                ★
+              </div>
+            )}
+            <div>
+              <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">
+                {businessName}
+              </h1>
+              <p className="text-xs text-blue-600 font-medium">
+                {config.category || 'Serviços & Atendimento Local'}
+              </p>
+            </div>
           </div>
-          <a
-            href={contact.whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white shadow-sm transition-all"
-            style={{ backgroundColor: theme.primaryColor }}
-          >
-            <span>💬</span>
-            <span>Fale Conosco</span>
-          </a>
+
+          <div className="hidden sm:flex items-center gap-3">
+            <a
+              href={contact.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ backgroundColor: theme.primaryColor || '#2563EB' }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-white shadow-sm transition-all hover:scale-105"
+            >
+              <span>💬</span>
+              <span>Falar Conosco</span>
+            </a>
+          </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-b from-slate-100 to-white relative">
-        <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200/60">
-              <span>⭐ {socialProof.rating.toFixed(1)} no Google</span>
-              <span>•</span>
+      {/* Hero Section Split */}
+      <section className="relative py-12 lg:py-20 bg-gradient-to-b from-white via-blue-50/30 to-slate-50 border-b border-slate-200/80 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100/80 text-blue-900 border border-blue-200">
+              <span className="text-amber-500">★</span>
+              <span>{socialProof.rating.toFixed(1)} no Google</span>
+              <span className="text-blue-300">•</span>
               <span>{socialProof.reviewCount} avaliações</span>
+              <span className="text-blue-300">•</span>
+              <span>Atendimento Verificado</span>
             </div>
-            <h2 className="text-3xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
               {content.headline}
             </h2>
-            <p className="text-lg text-slate-600 leading-relaxed">{content.subheadline}</p>
+
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
+              {content.subheadline}
+            </p>
+
             <div className="pt-2 flex flex-col sm:flex-row gap-4">
               <a
                 href={contact.whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex justify-center items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-base text-white shadow-lg transition-transform hover:-translate-y-0.5"
-                style={{ backgroundColor: theme.primaryColor }}
+                style={{ backgroundColor: theme.primaryColor || '#2563EB' }}
+                className="inline-flex justify-center items-center gap-2.5 px-7 py-4 rounded-full font-bold text-base text-white shadow-xl transition-all hover:brightness-110 active:scale-[0.98]"
               >
-                {content.callToAction || 'Chamar no WhatsApp'}
+                <span>💬</span>
+                <span>{content.callToAction || 'Falar no WhatsApp'}</span>
               </a>
+
+              {contact.address && (
+                <a
+                  href={mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex justify-center items-center gap-2 px-6 py-4 rounded-full font-semibold text-sm text-slate-700 bg-white border border-slate-300 shadow-xs hover:border-blue-400 hover:text-blue-600 transition-all"
+                >
+                  <span>📍</span>
+                  <span>Ver Endereço</span>
+                </a>
+              )}
+            </div>
+
+            <div className="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-slate-600">
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
+                <span className="text-blue-600">✓</span>
+                <span>Qualidade garantida</span>
+              </div>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
+                <span className="text-blue-600">✓</span>
+                <span>Resposta rápida</span>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
+                <span className="text-blue-600">✓</span>
+                <span>Equipe dedicada</span>
+              </div>
             </div>
           </div>
 
-          <div className="relative">
-            {heroImage ? (
-              <div className="rounded-2xl overflow-hidden shadow-xl border-4 border-white aspect-[4/3] bg-slate-200">
-                <img src={heroImage} alt={businessName} className="w-full h-full object-cover" />
+          <div className="lg:col-span-5 relative">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/5] bg-slate-100">
+              <img
+                src={heroImage}
+                alt={businessName}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
+              
+              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-lg flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-slate-900">Excelência Comprovada</p>
+                  <p className="text-[11px] text-slate-500 truncate">{businessName}</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-bold text-amber-500">
+                    ★ {socialProof.rating.toFixed(1)}
+                  </span>
+                </div>
               </div>
-            ) : (
-              <div className="rounded-2xl bg-slate-100 border border-slate-200 aspect-[4/3] flex items-center justify-center p-8 text-center text-slate-500 font-medium">
-                Atendimento profissional com tradição e qualidade.
-              </div>
-            )}
+            </div>
           </div>
+
         </div>
       </section>
 
-      {/* Services */}
-      <section className="py-16 bg-white border-y border-slate-200">
+      {/* Serviços */}
+      <section className="py-16 bg-white border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <h3 className="text-2xl lg:text-3xl font-bold text-slate-900">
-              Por que somos referência?
+            <span className="text-xs font-bold tracking-wider text-blue-600 uppercase">
+              Soluções Completas
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+              O que oferecemos para você
             </h3>
-            <p className="text-slate-600 mt-2">
-              Diferenciais que garantem a melhor experiência aos nossos clientes.
+            <p className="text-slate-600 mt-2 text-sm sm:text-base">
+              Serviços prestados com máxima dedicação e compromisso com resultados.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {content.keyServices.map((service, idx) => (
               <div
                 key={idx}
-                className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-300 transition-all"
+                className="p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between group"
               >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold mb-4"
-                  style={{ backgroundColor: theme.primaryColor }}
-                >
-                  ★
+                <div>
+                  <div
+                    style={{ backgroundColor: theme.primaryColor || '#2563EB' }}
+                    className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-sm mb-4 shadow-xs"
+                  >
+                    ★
+                  </div>
+                  <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-2">
+                    {service}
+                  </h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Atendimento consultivo e execução precisa adaptada às suas necessidades.
+                  </p>
                 </div>
-                <h4 className="text-lg font-bold text-slate-900 mb-2">{service}</h4>
-                <p className="text-sm text-slate-600">
-                  Soluções sob medida com foco na sua total satisfação.
-                </p>
+
+                <div className="mt-5 pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-blue-600 font-bold">
+                  <span>Solicitar</span>
+                  <span>→</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Depoimentos */}
       {socialProof.testimonials && socialProof.testimonials.length > 0 && (
-        <section className="py-16 bg-slate-50">
+        <section className="py-16 bg-slate-100/80 border-b border-slate-200">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-12">
-              <h3 className="text-2xl lg:text-3xl font-bold text-slate-900">
+              <span className="text-xs font-bold tracking-wider text-blue-600 uppercase">
+                Prova Social
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
                 Avaliações de Clientes
               </h3>
-              <p className="text-slate-600 mt-2">Depoimentos reais publicados no Google Maps.</p>
+              <p className="text-slate-600 mt-2 text-sm">
+                Feedback autêntico de clientes atendidos pelo nosso negócio.
+              </p>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {socialProof.testimonials.slice(0, 3).map((testimonial, idx) => (
+              {socialProof.testimonials.map((testimonial, idx) => (
                 <div
                   key={idx}
-                  className="p-6 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between"
+                  className="p-6 bg-white rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between"
                 >
                   <div className="space-y-3">
                     <div className="flex text-amber-400 text-sm">
                       {'★'.repeat(testimonial.rating)}
                     </div>
-                    <p className="text-sm text-slate-700 italic">"{testimonial.text}"</p>
+                    <p className="text-sm text-slate-700 italic leading-relaxed">
+                      &quot;{testimonial.text}&quot;
+                    </p>
                   </div>
                   <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span className="font-semibold text-slate-800">{testimonial.authorName}</span>
-                    <span>{testimonial.relativeTime || 'Google Maps'}</span>
+                    <span className="font-bold text-slate-800">
+                      {testimonial.authorName}
+                    </span>
+                    {testimonial.relativeTime && <span>{testimonial.relativeTime}</span>}
                   </div>
                 </div>
               ))}
@@ -134,26 +238,70 @@ export function GeralTemplate({ config }: { config: PreviewSiteConfig }) {
         </section>
       )}
 
-      {/* Footer */}
-      <footer className="mt-auto py-12 bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+      {/* Contato & Localização */}
+      <section className="py-14 bg-white">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
-            <h4 className="text-lg font-bold">{businessName}</h4>
-            <p className="text-sm text-slate-400 mt-1">{contact.address || 'Local'}</p>
-            <p className="text-sm text-slate-400">
-              Atendimento: {contact.phoneNormalized || contact.phoneRaw}
-            </p>
+            <span className="text-xs font-bold tracking-wider text-blue-600 uppercase">
+              Contato
+            </span>
+            <h3 className="text-2xl font-extrabold text-slate-900 mt-1 mb-3">
+              Entre em contato conosco
+            </h3>
+            {contact.address && (
+              <p className="text-sm text-slate-600 mb-2">
+                📍 <strong>Endereço:</strong> {contact.address}
+              </p>
+            )}
+            {contact.phoneRaw && (
+              <p className="text-sm text-slate-600 mb-4">
+                📞 <strong>Telefone:</strong> {contact.phoneRaw}
+              </p>
+            )}
+            {contact.address && (
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-slate-100 text-slate-800 hover:bg-slate-200 transition-colors border border-slate-300"
+              >
+                <span>🗺️</span>
+                <span>Ver no Google Maps</span>
+              </a>
+            )}
           </div>
-          <a
-            href={contact.whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-6 py-3 rounded-xl font-bold text-sm bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
-          >
-            Falar no WhatsApp
-          </a>
+
+          <div className="p-6 rounded-2xl bg-blue-50/70 border border-blue-200 text-center md:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <h4 className="text-lg font-bold text-slate-900">Atendimento Imediato</h4>
+              <p className="text-xs text-slate-600 mt-0.5">
+                Tire dúvidas ou peça um orçamento sem compromisso
+              </p>
+            </div>
+            <a
+              href={contact.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ backgroundColor: theme.primaryColor || '#2563EB' }}
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm text-white shadow-md transition-transform hover:scale-105"
+            >
+              <span>💬</span>
+              <span>WhatsApp</span>
+            </a>
+          </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Sticky Mobile Bar */}
+      <StickyMobileBar
+        whatsappLink={contact.whatsappLink}
+        ctaText={content.callToAction || 'Falar no WhatsApp'}
+        niche="geral"
+        primaryColor={theme.primaryColor}
+      />
+
+      {/* Rodapé Institucional */}
+      <VisualPitchFooter visualPitch={visualPitch} />
     </div>
   );
 }
